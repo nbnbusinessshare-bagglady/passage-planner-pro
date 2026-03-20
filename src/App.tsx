@@ -3,8 +3,15 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import HomePage from "./pages/HomePage";
+import WomensRetreatsPage from "./pages/WomensRetreatsPage";
+import BuildYourTripPage from "./pages/BuildYourTripPage";
+import TravelDealsPage from "./pages/TravelDealsPage";
+import TravelInfoPage from "./pages/TravelInfoPage";
+import ContactPage from "./pages/ContactPage";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -14,11 +21,19 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Navbar />
+        <main>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/womens-retreats" element={<WomensRetreatsPage />} />
+            <Route path="/build-your-trip" element={<BuildYourTripPage />} />
+            <Route path="/travel-deals" element={<TravelDealsPage />} />
+            <Route path="/travel-info" element={<TravelInfoPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
