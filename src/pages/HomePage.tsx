@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ScrollReveal } from '@/components/ScrollReveal';
+import { Sparkles, Compass, Tag, Users, MapPin, Heart } from 'lucide-react';
 import heroImg from '@/assets/hero-travel.jpg';
 import sedonaImg from '@/assets/sedona-retreat.jpg';
 import anguillaImg from '@/assets/anguilla-beach.jpg';
@@ -33,21 +34,21 @@ const HomePage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto animate-fade-up" style={{ animationDelay: '300ms' }}>
             <Link
               to="/womens-retreats"
-              className="w-full py-4 px-6 rounded-lg bg-primary text-primary-foreground font-medium text-center hover:opacity-90 active:scale-[0.97] transition-all"
+              className="w-full py-3.5 px-6 rounded-full bg-card/95 backdrop-blur text-foreground text-sm tracking-[0.14em] uppercase font-medium text-center border border-gold/40 hover:bg-gold hover:text-primary-foreground hover:border-gold transition-all"
             >
-              🌸 Explore Women's Retreats
+              Explore Women's Retreats
             </Link>
             <Link
               to="/build-your-trip"
-              className="w-full py-4 px-6 rounded-lg bg-secondary text-secondary-foreground font-medium text-center hover:opacity-90 active:scale-[0.97] transition-all"
+              className="w-full py-3.5 px-6 rounded-full bg-card/95 backdrop-blur text-foreground text-sm tracking-[0.14em] uppercase font-medium text-center border border-gold/40 hover:bg-gold hover:text-primary-foreground hover:border-gold transition-all"
             >
-              🌍 Plan Your Trip
+              Plan Your Trip
             </Link>
             <Link
               to="/travel-deals"
-              className="w-full py-4 px-6 rounded-lg bg-gold text-primary-foreground font-medium text-center hover:opacity-90 active:scale-[0.97] transition-all"
+              className="w-full py-3.5 px-6 rounded-full bg-gold text-primary-foreground text-sm tracking-[0.14em] uppercase font-medium text-center hover:opacity-90 transition-all"
             >
-              💸 View Travel Deals
+              View Travel Deals
             </Link>
           </div>
         </div>
@@ -63,18 +64,20 @@ const HomePage = () => {
           </ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[
-              { to: '/womens-retreats', emoji: '🌸', title: "Women's Retreats", desc: 'Curated experiences designed for women who crave connection and renewal' },
-              { to: '/build-your-trip', emoji: '🌍', title: 'Build Your Trip', desc: 'Share your vision and let us craft the perfect custom itinerary' },
-              { to: '/travel-deals', emoji: '💸', title: 'Travel Deals', desc: 'Exclusive rates on luxury getaways you won\'t find anywhere else' },
+              { to: '/womens-retreats', Icon: Sparkles, title: "Women's Retreats", desc: 'Curated experiences designed for women who crave connection and renewal' },
+              { to: '/build-your-trip', Icon: Compass, title: 'Build Your Trip', desc: 'Share your vision and let us craft the perfect custom itinerary' },
+              { to: '/travel-deals', Icon: Tag, title: 'Travel Deals', desc: "Exclusive rates on luxury getaways you won't find anywhere else" },
             ].map((card, i) => (
               <ScrollReveal key={card.to} delay={i * 100}>
                 <Link
                   to={card.to}
-                  className="block bg-card rounded-xl p-8 text-center shadow-sm hover:shadow-lg transition-shadow active:scale-[0.97] transition-transform"
+                  className="group block bg-card rounded-2xl p-7 text-center border border-border/60 shadow-[0_2px_24px_-12px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_-12px_rgba(0,0,0,0.12)] hover:border-gold/40 transition-all"
                 >
-                  <span className="text-5xl mb-4 block">{card.emoji}</span>
-                  <h3 className="text-xl font-display mb-2">{card.title}</h3>
-                  <p className="text-sm text-foreground/70">{card.desc}</p>
+                  <span className="mx-auto mb-5 inline-flex h-14 w-14 items-center justify-center rounded-full border border-gold/40 text-gold group-hover:bg-gold group-hover:text-primary-foreground transition-colors">
+                    <card.Icon size={22} strokeWidth={1.4} />
+                  </span>
+                  <h3 className="text-lg font-display mb-2">{card.title}</h3>
+                  <p className="text-[13px] leading-relaxed text-foreground/70">{card.desc}</p>
                 </Link>
               </ScrollReveal>
             ))}
@@ -106,21 +109,21 @@ const HomePage = () => {
           </ScrollReveal>
           <div className="flex flex-col gap-4">
             {[
-              { title: 'Her Glow Travel Circle', desc: 'A sacred space for women who travel with intention' },
-              { title: 'Build Your Dream Trip', desc: 'Connect with fellow travelers planning their next adventure' },
-              { title: 'Travel Deals & Getaways', desc: 'Be the first to know about exclusive limited-time offers' },
+              { Icon: Heart, title: 'Her Glow Travel Circle', desc: 'A sacred space for women who travel with intention' },
+              { Icon: Users, title: 'Build Your Dream Trip', desc: 'Connect with fellow travelers planning their next adventure' },
+              { Icon: MapPin, title: 'Travel Deals & Getaways', desc: 'Be the first to know about exclusive limited-time offers' },
             ].map((item, i) => (
               <ScrollReveal key={item.title} delay={i * 80}>
                 <a
                   href="#"
-                  className="flex items-center gap-4 bg-card rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow active:scale-[0.98] transition-transform"
+                  className="group flex items-center gap-4 bg-card rounded-2xl p-5 border border-border/60 shadow-[0_2px_24px_-12px_rgba(0,0,0,0.08)] hover:border-gold/40 hover:shadow-[0_8px_32px_-12px_rgba(0,0,0,0.12)] transition-all"
                 >
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                    <span className="text-primary font-display text-lg">SP</span>
+                  <div className="w-12 h-12 rounded-full border border-gold/40 text-gold flex items-center justify-center shrink-0 group-hover:bg-gold group-hover:text-primary-foreground transition-colors">
+                    <item.Icon size={18} strokeWidth={1.4} />
                   </div>
                   <div>
-                    <h3 className="font-display text-lg">{item.title}</h3>
-                    <p className="text-sm text-foreground/60">{item.desc}</p>
+                    <h3 className="font-display text-base">{item.title}</h3>
+                    <p className="text-[13px] text-foreground/60">{item.desc}</p>
                   </div>
                 </a>
               </ScrollReveal>
