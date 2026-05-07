@@ -1,10 +1,15 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Plus, Sparkles, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Tag, Image as ImageIcon, Megaphone, Settings, Sparkles, ShieldCheck, ArrowLeft, Plus } from 'lucide-react';
 
 const navItems = [
   { to: '/vendor', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/vendor/submit', label: 'New Submission', icon: Plus },
+  { to: '/vendor/submit', label: 'My Packages', icon: Package },
+  { to: '/vendor/events', label: 'Events', icon: Calendar },
+  { to: '/vendor/promotions', label: 'Promotions', icon: Tag },
+  { to: '/vendor/media', label: 'Media Uploads', icon: ImageIcon },
+  { to: '/vendor/campaigns', label: 'Campaign Requests', icon: Megaphone },
   { to: '/vendor/ai-generator', label: 'AI Campaign Studio', icon: Sparkles },
+  { to: '/vendor/settings', label: 'Settings', icon: Settings },
   { to: '/admin/review', label: 'Admin Review', icon: ShieldCheck },
 ];
 
