@@ -1,60 +1,57 @@
 import { Link } from 'react-router-dom';
-import { Lock } from 'lucide-react';
+import logo from '@/assets/logo.png';
 
 const VendorLoginPage = () => {
   return (
-    <div className="min-h-screen pt-16 md:pt-20 flex items-center justify-center section-cream">
+    <div className="min-h-screen pt-16 md:pt-20 flex items-center justify-center bg-[hsl(0,0%,8%)] text-cream">
       <div className="container max-w-md py-16">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-primary/10 mb-4">
-            <Lock className="text-primary" size={22} />
-          </div>
-          <p className="text-[10px] tracking-[0.22em] uppercase text-gold mb-2">Private Access</p>
-          <h1 className="font-display text-3xl md:text-4xl text-card-foreground mb-3">Vendor Portal</h1>
-          <p className="font-script text-lg text-foreground/70">
+        <div className="text-center mb-10">
+          <img src={logo} alt="Serene Passages" className="h-16 w-auto mx-auto mb-6 opacity-90" />
+          <p className="text-[10px] tracking-[0.32em] uppercase text-gold mb-3">Private Access</p>
+          <h1 className="font-display text-4xl text-cream mb-3">Vendor Portal</h1>
+          <p className="font-script text-lg text-cream/70">
             A curated space for our trusted travel partners
           </p>
         </div>
 
-        <div className="bg-card rounded-2xl shadow-sm border border-border/60 p-8">
-          <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+        <div className="bg-[hsl(0,0%,12%)] rounded-2xl border border-gold/20 p-8 shadow-2xl">
+          <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
             <div>
-              <label className="text-xs tracking-wide uppercase text-foreground/60 mb-1.5 block">Email</label>
+              <label className="text-[10px] tracking-[0.22em] uppercase text-cream/60 mb-2 block">Email</label>
               <input
                 type="email"
                 placeholder="vendor@yourbrand.com"
-                className="w-full h-11 px-4 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full h-12 px-4 rounded-md bg-transparent border border-cream/15 text-cream placeholder:text-cream/30 text-sm focus:outline-none focus:border-gold transition-colors"
               />
             </div>
             <div>
-              <label className="text-xs tracking-wide uppercase text-foreground/60 mb-1.5 block">Password</label>
+              <label className="text-[10px] tracking-[0.22em] uppercase text-cream/60 mb-2 block">Password</label>
               <input
                 type="password"
                 placeholder="••••••••"
-                className="w-full h-11 px-4 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full h-12 px-4 rounded-md bg-transparent border border-cream/15 text-cream placeholder:text-cream/30 text-sm focus:outline-none focus:border-gold transition-colors"
               />
             </div>
             <Link
               to="/vendor"
-              className="mt-2 w-full h-11 inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all"
+              className="mt-2 w-full h-12 inline-flex items-center justify-center rounded-md bg-gold text-[hsl(0,0%,8%)] text-xs tracking-[0.22em] uppercase font-semibold hover:bg-gold/90 active:scale-[0.99] transition-all"
             >
-              Enter Portal
+              Access Vendor Portal
             </Link>
-            <a href="#" className="text-xs text-center text-foreground/60 hover:text-primary transition-colors">
+            <a href="#" className="text-xs text-center text-cream/50 hover:text-gold transition-colors">
               Forgot password?
             </a>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-border/60 text-center">
-            <p className="text-xs text-foreground/60">
-              Not yet a partner?{' '}
-              <a href="#" className="text-primary font-medium hover:underline">Apply for collaboration</a>
-            </p>
+          <div className="mt-7 pt-6 border-t border-cream/10 text-center">
+            <a href="#" className="text-xs tracking-[0.18em] uppercase text-gold hover:underline">
+              Become a Vendor Partner →
+            </a>
           </div>
         </div>
 
-        <p className="text-center text-[11px] text-foreground/50 mt-6">
-          Curated through trusted travel partnerships · Secure access
+        <p className="text-center text-[11px] text-cream/40 mt-6 tracking-wide">
+          Curated through trusted travel partnerships
         </p>
       </div>
     </div>
