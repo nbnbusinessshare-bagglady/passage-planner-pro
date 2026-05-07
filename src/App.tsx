@@ -12,6 +12,12 @@ import TravelDealsPage from "./pages/TravelDealsPage";
 import TravelInfoPage from "./pages/TravelInfoPage";
 import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
+import VendorLoginPage from "./pages/vendor/VendorLoginPage";
+import VendorDashboardPage from "./pages/vendor/VendorDashboardPage";
+import VendorSubmitPage from "./pages/vendor/VendorSubmitPage";
+import AIGeneratorPage from "./pages/vendor/AIGeneratorPage";
+import AdminReviewPage from "./pages/admin/AdminReviewPage";
+import { VendorLayout } from "./components/vendor/VendorLayout";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +36,13 @@ const App = () => (
             <Route path="/travel-deals" element={<TravelDealsPage />} />
             <Route path="/travel-info" element={<TravelInfoPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/vendor/login" element={<VendorLoginPage />} />
+            <Route element={<VendorLayout />}>
+              <Route path="/vendor" element={<VendorDashboardPage />} />
+              <Route path="/vendor/submit" element={<VendorSubmitPage />} />
+              <Route path="/vendor/ai-generator" element={<AIGeneratorPage />} />
+              <Route path="/admin/review" element={<AdminReviewPage />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

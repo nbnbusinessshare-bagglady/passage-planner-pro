@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import heroImg from '@/assets/hero-travel.jpg';
+import sedonaImg from '@/assets/sedona-retreat.jpg';
+import anguillaImg from '@/assets/anguilla-beach.jpg';
+import cartagenaImg from '@/assets/cartagena-culture.jpg';
+import costaricaImg from '@/assets/costarica-retreat.jpg';
 
 const HomePage = () => {
   return (
@@ -119,6 +123,57 @@ const HomePage = () => {
                     <p className="text-sm text-foreground/60">{item.desc}</p>
                   </div>
                 </a>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Public Travel Deals Preview */}
+      <section className="py-16 md:py-24 section-sage">
+        <div className="container">
+          <ScrollReveal>
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <p className="text-[10px] tracking-[0.22em] uppercase text-gold mb-2">Curated · Approved · Ready</p>
+              <h2 className="text-3xl md:text-4xl font-display mb-3">This Season's Travel Edit</h2>
+              <p className="font-script text-lg text-foreground/70">
+                A handpicked preview of our partners' newest journeys
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {[
+              { img: sedonaImg, tag: 'Featured Destination', title: 'Sedona Soul Reset', meta: 'Spring 2026 · 8 spaces', desc: 'Vortex meditation, sunrise hikes, and desert-sky dinners.' },
+              { img: anguillaImg, tag: 'Limited-Time Package', title: 'Anguilla Villa Escape', meta: 'Save 15% · Through April', desc: 'Beachfront villa with private chef and sunset sail.' },
+              { img: costaricaImg, tag: "Women's Retreat", title: 'Costa Rica Wellness Week', meta: 'May 2–9, 2026', desc: 'Yoga, jungle hikes, and oceanfront restoration.' },
+              { img: cartagenaImg, tag: 'Cultural Festival', title: 'Cartagena Cultural Immersion', meta: 'April · Limited capacity', desc: 'Old-city walking tours and candlelit courtyard nights.' },
+            ].map((d, i) => (
+              <ScrollReveal key={d.title} delay={i * 80}>
+                <article className="bg-card rounded-2xl overflow-hidden shadow-sm border border-border/60 h-full flex flex-col">
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    <img src={d.img} alt={d.title} className="w-full h-full object-cover" />
+                    <span className="absolute top-3 left-3 bg-card/95 backdrop-blur px-3 py-1 rounded-full text-[10px] tracking-[0.18em] uppercase text-primary font-medium">
+                      {d.tag}
+                    </span>
+                  </div>
+                  <div className="p-6 flex-1 flex flex-col">
+                    <h3 className="font-display text-xl text-card-foreground">{d.title}</h3>
+                    <p className="text-xs text-foreground/60 mt-1">{d.meta}</p>
+                    <p className="text-sm text-foreground/75 mt-3 flex-1">{d.desc}</p>
+                    <div className="flex flex-col sm:flex-row gap-2 mt-5">
+                      <button className="flex-1 h-10 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:opacity-90 transition-all">
+                        View Details
+                      </button>
+                      <button className="flex-1 h-10 rounded-lg border border-border bg-card text-xs font-medium hover:bg-muted transition-colors">
+                        Request This Trip
+                      </button>
+                      <button className="flex-1 h-10 rounded-lg bg-gold/90 text-primary-foreground text-xs font-medium hover:bg-gold transition-colors">
+                        Join Interest List
+                      </button>
+                    </div>
+                  </div>
+                </article>
               </ScrollReveal>
             ))}
           </div>
