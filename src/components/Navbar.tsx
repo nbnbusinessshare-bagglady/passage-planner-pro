@@ -10,6 +10,7 @@ const navLinks = [
   { to: '/travel-deals', label: 'Travel Deals' },
   { to: '/travel-info', label: 'Travel Info' },
   { to: '/contact', label: 'Contact' },
+  { to: '/vendor/login', label: 'Vendor Portal' },
 ];
 
 export const Navbar = () => {
