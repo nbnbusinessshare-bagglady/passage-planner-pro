@@ -18,6 +18,7 @@ import VendorSubmitPage from "./pages/vendor/VendorSubmitPage";
 import AIGeneratorPage from "./pages/vendor/AIGeneratorPage";
 import AdminReviewPage from "./pages/admin/AdminReviewPage";
 import { VendorLayout } from "./components/vendor/VendorLayout";
+import VendorStubPage from "./pages/vendor/VendorStubPage";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,11 @@ const App = () => (
               <Route path="/vendor" element={<VendorDashboardPage />} />
               <Route path="/vendor/submit" element={<VendorSubmitPage />} />
               <Route path="/vendor/ai-generator" element={<AIGeneratorPage />} />
+              <Route path="/vendor/events" element={<VendorStubPage />} />
+              <Route path="/vendor/promotions" element={<VendorStubPage />} />
+              <Route path="/vendor/media" element={<VendorStubPage />} />
+              <Route path="/vendor/campaigns" element={<VendorStubPage />} />
+              <Route path="/vendor/settings" element={<VendorStubPage />} />
               <Route path="/admin/review" element={<AdminReviewPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
