@@ -19,6 +19,9 @@ import AIGeneratorPage from "./pages/vendor/AIGeneratorPage";
 import AdminReviewPage from "./pages/admin/AdminReviewPage";
 import { VendorLayout } from "./components/vendor/VendorLayout";
 import VendorStubPage from "./pages/vendor/VendorStubPage";
+import MediaUploadsPage from "./pages/vendor/MediaUploadsPage";
+import CampaignRequestsPage from "./pages/vendor/CampaignRequestsPage";
+import SettingsPage from "./pages/vendor/SettingsPage";
 
 const queryClient = new QueryClient();
 
@@ -44,9 +47,9 @@ const App = () => (
               <Route path="/vendor/ai-generator" element={<AIGeneratorPage />} />
               <Route path="/vendor/events" element={<VendorStubPage />} />
               <Route path="/vendor/promotions" element={<VendorStubPage />} />
-              <Route path="/vendor/media" element={<VendorStubPage />} />
-              <Route path="/vendor/campaigns" element={<VendorStubPage />} />
-              <Route path="/vendor/settings" element={<VendorStubPage />} />
+              <Route path="/vendor/media" element={<MediaUploadsPage />} />
+              <Route path="/vendor/campaigns" element={<CampaignRequestsPage />} />
+              <Route path="/vendor/settings" element={<SettingsPage />} />
               <Route path="/admin/review" element={<AdminReviewPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
