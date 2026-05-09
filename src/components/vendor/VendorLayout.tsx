@@ -1,16 +1,18 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Calendar, Tag, Image as ImageIcon, Megaphone, Settings, Sparkles, ShieldCheck, ArrowLeft, Plus } from 'lucide-react';
+import { LayoutDashboard, Compass, CalendarHeart, Tag, Images, HandHeart, Settings, Sparkles, ShieldCheck, ArrowLeft, Globe2, Handshake } from 'lucide-react';
 
 const navItems = [
-  { to: '/vendor', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/vendor/submit', label: 'My Packages', icon: Package },
-  { to: '/vendor/events', label: 'Events', icon: Calendar },
-  { to: '/vendor/promotions', label: 'Promotions', icon: Tag },
-  { to: '/vendor/media', label: 'Media Uploads', icon: ImageIcon },
-  { to: '/vendor/campaigns', label: 'Campaign Requests', icon: Megaphone },
-  { to: '/vendor/ai-generator', label: 'AI Campaign Studio', icon: Sparkles },
+  { to: '/vendor', label: 'Partner Suite', icon: LayoutDashboard, end: true },
+  { to: '/vendor/submit', label: 'Travel Opportunities', icon: Compass },
+  { to: '/vendor/events', label: 'Destination Events', icon: CalendarHeart },
+  { to: '/vendor/promotions', label: 'Seasonal Promotions', icon: Tag },
+  { to: '/vendor/media', label: 'Travel Asset Library', icon: Images },
+  { to: '/vendor/campaigns', label: 'Experience Collaborations', icon: HandHeart },
+  { to: '/vendor/ai-generator', label: 'Experience Builder Studio', icon: Sparkles },
+  { to: '/vendor/relationships', label: 'Partner Relationships', icon: Handshake },
+  { to: '/vendor/industry', label: 'Industry Events & Partnerships', icon: Globe2 },
   { to: '/vendor/settings', label: 'Settings', icon: Settings },
-  { to: '/admin/review', label: 'Admin Review', icon: ShieldCheck },
+  { to: '/admin/review', label: 'Curation Review', icon: ShieldCheck },
 ];
 
 export const VendorLayout = () => {
@@ -24,9 +26,10 @@ export const VendorLayout = () => {
             <div className="bg-card rounded-2xl p-6 shadow-sm border border-border/60 sticky top-24">
               <div className="flex items-center gap-2 mb-1">
                 <span className="h-2 w-2 rounded-full bg-gold" />
-                <span className="text-[10px] tracking-[0.18em] uppercase text-foreground/60">Private Portal</span>
+                <span className="text-[10px] tracking-[0.18em] uppercase text-foreground/60">Invitation Only</span>
               </div>
-              <h2 className="font-display text-xl text-card-foreground mb-6">Vendor Suite</h2>
+              <h2 className="font-display text-xl text-card-foreground mb-1">Travel Partner Portal</h2>
+              <p className="text-[11px] text-foreground/55 leading-relaxed mb-6">A curated collaboration space for our trusted travel partners.</p>
               <nav className="flex flex-col gap-1">
                 {navItems.map((item) => {
                   const Icon = item.icon;
@@ -71,12 +74,17 @@ export const VendorLayout = () => {
   );
 };
 
-export const StatusBadge = ({ status }: { status: 'Draft' | 'Submitted' | 'Needs Revision' | 'Approved' }) => {
-  const styles: Record<string, string> = {
+export type CollabStatus = 'Draft' | 'Submitted' | 'Reviewed' | 'Curated' | 'Needs Revision' | 'Approved' | 'Featured Experience';
+
+export const StatusBadge = ({ status }: { status: CollabStatus }) => {
+  const styles: Record<CollabStatus, string> = {
     Draft: 'bg-muted text-foreground/70',
     Submitted: 'bg-lavender/30 text-primary',
+    Reviewed: 'bg-lavender/40 text-primary',
+    Curated: 'bg-sage/30 text-foreground',
     'Needs Revision': 'bg-rose/30 text-foreground',
     Approved: 'bg-sage/40 text-foreground',
+    'Featured Experience': 'bg-gold/25 text-foreground',
   };
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium tracking-wide ${styles[status]}`}>

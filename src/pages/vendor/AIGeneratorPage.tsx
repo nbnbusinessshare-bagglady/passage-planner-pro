@@ -41,9 +41,9 @@ const AIGeneratorPage = () => {
   return (
     <div className="space-y-6">
       <SectionHeader
-        eyebrow="AI Studio"
-        title="Campaign Generator"
-        description="Tell us the soul of your trip. We'll draft the words to share it with the world."
+        eyebrow="Curated Experience Studio"
+        title="Experience Builder Studio"
+        description="Transform partner information into emotional, editorial, customer-facing luxury travel storytelling."
       />
 
       <div className="grid grid-cols-1 xl:grid-cols-[380px_1fr] gap-6">
@@ -51,7 +51,7 @@ const AIGeneratorPage = () => {
         <div className="bg-card rounded-2xl border border-border/60 shadow-sm p-6 space-y-4 h-fit xl:sticky xl:top-24">
           <div className="flex items-center gap-2">
             <Sparkles size={16} className="text-gold" />
-            <h2 className="font-display text-lg text-card-foreground">Trip Inputs</h2>
+            <h2 className="font-display text-lg text-card-foreground">Experience Inputs</h2>
           </div>
           <Field label="Destination"><input className={inputCls} placeholder="Sedona, Arizona" /></Field>
           <Field label="Audience">
@@ -70,16 +70,18 @@ const AIGeneratorPage = () => {
               <option>Cultural & soulful</option>
             </select>
           </Field>
-          <Field label="Trip Type">
+          <Field label="Experience Type">
             <select className={inputCls}>
               <option>Wellness Retreat</option>
               <option>Cultural Immersion</option>
-              <option>Luxury Villa</option>
-              <option>Festival Travel</option>
+              <option>Luxury Villa / Resort</option>
+              <option>Romance Travel</option>
+              <option>Destination Event</option>
+              <option>Group Experience</option>
             </select>
           </Field>
           <Field label="Dates"><input className={inputCls} placeholder="Mar 14 – 20, 2026" /></Field>
-          <Field label="Package Highlights">
+          <Field label="Experience Highlights">
             <textarea
               rows={4}
               className="w-full px-4 py-3 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
@@ -87,15 +89,15 @@ const AIGeneratorPage = () => {
             />
           </Field>
           <button className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all">
-            <Sparkles size={15} /> Generate Campaign
+            <Sparkles size={15} /> Build Curated Experience
           </button>
         </div>
 
         {/* Output Preview */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-[10px] tracking-[0.22em] uppercase text-gold">Preview</p>
-            <span className="text-xs text-foreground/50">Sample output · refresh to regenerate</span>
+            <p className="text-[10px] tracking-[0.22em] uppercase text-gold">Editorial Preview</p>
+            <span className="text-xs text-foreground/50">Sample storytelling · refresh to regenerate</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {outputs.map((o) => (
