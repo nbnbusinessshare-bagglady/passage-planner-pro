@@ -49,6 +49,8 @@ const App = () => (
               <Route path="/vendor/promotions" element={<VendorStubPage />} />
               <Route path="/vendor/media" element={<MediaUploadsPage />} />
               <Route path="/vendor/campaigns" element={<CampaignRequestsPage />} />
+              <Route path="/vendor/relationships" element={<VendorStubPage />} />
+              <Route path="/vendor/industry" element={<VendorStubPage />} />
               <Route path="/vendor/settings" element={<SettingsPage />} />
               <Route path="/admin/review" element={<AdminReviewPage />} />
             </Route>
