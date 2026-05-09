@@ -49,30 +49,30 @@ const SettingsPage = () => {
   return (
     <div className="space-y-8">
       <SectionHeader
-        eyebrow="Account"
+        eyebrow="Partner Account"
         title="Settings"
-        description="Manage vendor profile, notification preferences, and brand details."
+        description="Manage your travel partner profile, collaboration preferences, and notifications."
       />
 
-      <Card eyebrow="Section A" title="Vendor Profile">
+      <Card eyebrow="Section A" title="Travel Partner Profile">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <Field label="Vendor Business Name"><Input placeholder="Maison Voyage" /></Field>
+          <Field label="Travel Partner Business Name"><Input placeholder="Maison Voyage" /></Field>
           <Field label="Contact Person"><Input placeholder="Amara Johnson" /></Field>
           <Field label="Email"><Input type="email" placeholder="hello@maisonvoyage.com" /></Field>
           <Field label="Phone"><Input placeholder="+1 (555) 123-4567" /></Field>
           <Field label="Website"><Input placeholder="https://" /></Field>
           <Field label="Country / Region"><Input placeholder="United States" /></Field>
           <div className="md:col-span-2">
-            <Field label="Vendor Type">
+            <Field label="Partner Type">
               <Select>
-                <SelectTrigger><SelectValue placeholder="Select vendor type" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Select partner type" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="resort">Resort / Hotel</SelectItem>
                   <SelectItem value="retreat">Retreat Host</SelectItem>
                   <SelectItem value="tour">Tour Operator</SelectItem>
                   <SelectItem value="cruise">Cruise Partner</SelectItem>
                   <SelectItem value="transport">Transportation Provider</SelectItem>
-                  <SelectItem value="event">Event Partner</SelectItem>
+                  <SelectItem value="event">Destination Event Partner</SelectItem>
                   <SelectItem value="excursion">Excursion Provider</SelectItem>
                   <SelectItem value="tourism">Tourism Board</SelectItem>
                 </SelectContent>
@@ -82,16 +82,16 @@ const SettingsPage = () => {
         </div>
       </Card>
 
-      <Card eyebrow="Section B" title="Brand & Promotion Preferences">
+      <Card eyebrow="Section B" title="Brand & Curation Preferences">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <Field label="Preferred Promotion Style"><Input placeholder="Editorial, intimate, story-led" /></Field>
+          <Field label="Preferred Curation Style"><Input placeholder="Editorial, intimate, story-led" /></Field>
           <Field label="Target Audience"><Input placeholder="Wellness travelers, women's groups" /></Field>
           <div className="md:col-span-2">
-            <Field label="Preferred Destinations"><Input placeholder="Sedona, Cartagena, Anguilla" /></Field>
+            <Field label="Destination Specialties"><Input placeholder="Sedona, Cartagena, Anguilla" /></Field>
           </div>
           <div className="md:col-span-2">
-            <Field label="Notes for Serene Passage Strategist">
-              <Textarea rows={4} placeholder="Share anything that helps us craft your campaigns thoughtfully..." />
+            <Field label="Notes for your Serene Passage Curator">
+              <Textarea rows={4} placeholder="Share anything that helps us shape your experiences thoughtfully..." />
             </Field>
           </div>
         </div>
@@ -99,19 +99,19 @@ const SettingsPage = () => {
 
       <Card eyebrow="Section C" title="Notification Preferences">
         <div className="divide-y divide-border/50">
-          <Toggle label="Campaign approval updates" description="Be notified when a campaign is approved." defaultChecked />
-          <Toggle label="Revision requests" description="Get a note when our team requests revisions." defaultChecked />
-          <Toggle label="Public preview notifications" description="Know the moment a campaign goes live." defaultChecked />
-          <Toggle label="New inquiry alerts" description="Receive alerts when travelers inquire about your offerings." />
-          <Toggle label="Monthly performance summary" description="A curated monthly digest of your campaign performance." defaultChecked />
+          <Toggle label="Curation approval updates" description="Be notified when a curated experience is approved." defaultChecked />
+          <Toggle label="Revision requests" description="Get a note when our curators suggest refinements." defaultChecked />
+          <Toggle label="Featured experience notifications" description="Know the moment a curated experience is featured." defaultChecked />
+          <Toggle label="Traveler inquiry alerts" description="Receive alerts when travelers inquire about your destinations." />
+          <Toggle label="Monthly relationship summary" description="A curated monthly digest of your collaborations and reach." defaultChecked />
         </div>
       </Card>
 
       <Card eyebrow="Section D" title="Account Actions">
         <div className="flex flex-col sm:flex-row gap-3">
           <Button className="bg-gold hover:bg-gold/90 text-foreground">Save Settings</Button>
-          <Button variant="outline">Request Profile Review</Button>
-          <Button variant="ghost" className="text-destructive hover:text-destructive">Deactivate Vendor Profile</Button>
+          <Button variant="outline">Request Partner Profile Review</Button>
+          <Button variant="ghost" className="text-destructive hover:text-destructive">Deactivate Partner Profile</Button>
         </div>
       </Card>
     </div>
