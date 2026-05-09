@@ -134,7 +134,7 @@ const IndustryView = () => {
   );
 };
 
-const titles: Record<string, { eyebrow: string; title: string; description: string; render?: () => JSX.Element }> = {
+const titles: Record<string, { eyebrow: string; title: string; description: string; render?: () => React.ReactNode }> = {
   '/vendor/events': {
     eyebrow: 'Destination Events',
     title: 'Destination Events',
