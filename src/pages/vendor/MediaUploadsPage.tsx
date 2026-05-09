@@ -1,151 +1,241 @@
-import { SectionHeader, StatusBadge, type CollabStatus } from '@/components/vendor/VendorLayout';
+// FILE: src/pages/vendor/MediaUploadsPage.tsx
+
+import { SectionHeader } from '@/components/vendor/VendorLayout';
 import { Button } from '@/components/ui/button';
-import { UploadCloud, FileImage, FileVideo, FileText, Eye, Link2 } from 'lucide-react';
 
-type MediaStatus = 'Ready' | 'Pending Review' | 'Needs Replacement';
+import {
+  UploadCloud,
+  FileImage,
+  FileVideo,
+  FileText,
+  Link2,
+  Camera,
+  FileSpreadsheet,
+} from 'lucide-react';
 
-type Category =
-  | 'Resorts'
-  | 'Wellness Retreats'
-  | 'Romance Travel'
-  | 'Excursions'
-  | 'Cruises'
-  | 'Weddings'
-  | 'Group Experiences'
-  | 'Destination Events'
-  | 'Luxury Experiences';
+import mediaHero from '@/assets/partner-portal/travel-asset-library-flatlay.png';
 
-const categories: Category[] = [
+const assetTypes = [
+  {
+    title: 'Photography',
+    description: 'Resort images, rooms, dining, excursions, weddings, retreats.',
+    icon: Camera,
+  },
+  {
+    title: 'Brochures & Flyers',
+    description: 'PDF guides, package flyers, destination info, event materials.',
+    icon: FileText,
+  },
+  {
+    title: 'Videos',
+    description: 'Property tours, destination reels, experience previews, testimonials.',
+    icon: FileVideo,
+  },
+  {
+    title: 'Rates & Details',
+    description: 'Rate sheets, package notes, group terms, booking conditions.',
+    icon: FileSpreadsheet,
+  },
+];
+
+const categories = [
   'Resorts',
-  'Wellness Retreats',
+  'Destination Weddings',
   'Romance Travel',
-  'Excursions',
+  'Women’s Retreats',
+  'Wellness',
   'Cruises',
-  'Weddings',
-  'Group Experiences',
-  'Destination Events',
+  'Excursions',
+  'Group Travel',
   'Luxury Experiences',
+  'Transportation',
 ];
 
-const media: { name: string; type: string; size: string; status: MediaStatus; category: Category }[] = [
-  { name: 'Sedona-retreat-view.jpg', type: 'JPG', size: '4.2 MB', status: 'Ready', category: 'Wellness Retreats' },
-  { name: 'Caribbean-villa-tour.mp4', type: 'MP4', size: '38.1 MB', status: 'Pending Review', category: 'Resorts' },
-  { name: 'Spring2026-brochure.pdf', type: 'PDF', size: '6.8 MB', status: 'Ready', category: 'Luxury Experiences' },
-  { name: 'Cartagena-dinner-night.jpg', type: 'JPG', size: '3.5 MB', status: 'Needs Replacement', category: 'Destination Events' },
-  { name: 'Anguilla-sunset.jpg', type: 'JPG', size: '5.1 MB', status: 'Ready', category: 'Romance Travel' },
-  { name: 'Wellness-retreat-room.jpg', type: 'JPG', size: '4.7 MB', status: 'Pending Review', category: 'Wellness Retreats' },
+const sampleAssets = [
+  {
+    name: 'Resort exterior photos',
+    type: 'JPG / PNG',
+    category: 'Resorts',
+  },
+  {
+    name: 'Wedding package brochure',
+    type: 'PDF',
+    category: 'Destination Weddings',
+  },
+  {
+    name: 'Group rate sheet',
+    type: 'PDF / XLS',
+    category: 'Group Travel',
+  },
+  {
+    name: 'Property video tour',
+    type: 'MP4',
+    category: 'Luxury Experiences',
+  },
 ];
-
-const iconFor = (type: string) => {
-  if (type === 'MP4') return FileVideo;
-  if (type === 'PDF') return FileText;
-  return FileImage;
-};
-
-const statusMap: Record<MediaStatus, CollabStatus> = {
-  Ready: 'Approved',
-  'Pending Review': 'Submitted',
-  'Needs Replacement': 'Needs Revision',
-};
 
 const MediaUploadsPage = () => {
   return (
     <div className="space-y-8">
-      <SectionHeader
-        eyebrow="Editorial Library"
-        title="Travel Asset Library"
-        description="Upload and organize editorial visuals across our luxury travel categories — ready for curation into customer-facing experiences."
-      />
+      <section className="relative overflow-hidden rounded-3xl border border-border/60 shadow-sm min-h-[340px] bg-[hsl(0,0%,8%)]">
+        <img
+          src={mediaHero}
+          alt="Luxury travel asset library flat lay"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
 
-      {/* Upload card */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+
+        <div className="relative z-10 p-6 md:p-10 min-h-[340px] flex items-center">
+          <div className="max-w-2xl">
+            <p className="text-[10px] tracking-[0.32em] uppercase text-gold mb-4">
+              Travel Asset Library
+            </p>
+
+            <h1 className="font-display text-3xl md:text-5xl text-cream leading-tight">
+              Upload Travel Assets
+            </h1>
+
+            <p className="text-sm md:text-base text-cream/75 mt-4 leading-relaxed">
+              Share photography, brochures, videos, media kits, and supporting materials Serene Passage International may use to review and curate future client experiences.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <div className="bg-card rounded-2xl border border-border/60 shadow-sm p-6 md:p-8">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-[10px] tracking-[0.22em] uppercase text-gold">Step One</span>
-        </div>
-        <h2 className="font-display text-xl text-card-foreground mb-4">Upload Experience Assets</h2>
-        <div className="border-2 border-dashed border-border rounded-xl p-10 text-center bg-background/40 hover:bg-background/70 transition-colors">
+        <p className="text-[10px] tracking-[0.22em] uppercase text-gold mb-2">
+          Partner Materials
+        </p>
+
+        <h2 className="font-display text-2xl text-card-foreground">
+          Add Your Media & Supporting Files
+        </h2>
+
+        <p className="text-sm text-foreground/65 mt-2 max-w-2xl leading-relaxed">
+          This area is prepared for partner asset uploads. During early access, files may be shared directly with Serene Passage while the upload connection is being finalized.
+        </p>
+
+        <div className="border-2 border-dashed border-border rounded-xl p-10 text-center bg-background/40 hover:bg-background/70 transition-colors mt-6">
           <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-gold/10 mb-4">
-            <UploadCloud className="text-gold" size={22} />
+            <UploadCloud className="text-gold" size={24} />
           </div>
-          <p className="font-display text-lg text-card-foreground">Drag & drop your files here</p>
-          <p className="text-sm text-foreground/60 mt-1">or click to browse from your device</p>
-          <div className="mt-5 flex flex-col items-center gap-1 text-xs text-foreground/55">
-            <span>Accepted formats: JPG, PNG, PDF, MP4</span>
-            <span>Up to 50 MB each</span>
-          </div>
-          <Button className="mt-6 bg-gold hover:bg-gold/90 text-foreground">Upload Experience Assets</Button>
+
+          <p className="font-display text-lg text-card-foreground">
+            Upload connection coming soon
+          </p>
+
+          <p className="text-sm text-foreground/60 mt-1">
+            Accepted files will include JPG, PNG, PDF, MP4, and rate documents.
+          </p>
+
+          <Button className="mt-6 bg-gold hover:bg-gold/90 text-foreground">
+            Upload Experience Assets
+          </Button>
         </div>
       </div>
 
-      {/* Categories */}
-      <div>
-        <p className="text-[10px] tracking-[0.22em] uppercase text-gold mb-3">Curated By Category</p>
-        <div className="flex flex-wrap gap-2">
-          {categories.map((c) => (
-            <span
-              key={c}
-              className="px-4 py-1.5 rounded-full border border-border/70 bg-card text-xs tracking-wide text-foreground/75 hover:border-gold/60 hover:text-gold transition-colors cursor-pointer"
-            >
-              {c}
-            </span>
-          ))}
-        </div>
-      </div>
+      <section>
+        <SectionHeader
+          eyebrow="Recommended"
+          title="What Partners Should Share"
+          description="The stronger the materials, the easier it is to represent the experience beautifully and accurately."
+        />
 
-      {/* Media grid */}
-      <div>
-        <div className="flex items-end justify-between mb-4">
-          <div>
-            <p className="text-[10px] tracking-[0.22em] uppercase text-gold mb-1">Your Library</p>
-            <h2 className="font-display text-xl text-card-foreground">Travel Asset Library</h2>
-          </div>
-          <span className="text-xs text-foreground/55">{media.length} editorial assets</span>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {media.map((m) => {
-            const Icon = iconFor(m.type);
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {assetTypes.map((item) => {
+            const Icon = item.icon;
+
             return (
               <div
-                key={m.name}
-                className="bg-card rounded-2xl border border-border/60 shadow-sm overflow-hidden flex flex-col"
+                key={item.title}
+                className="bg-card rounded-2xl border border-border/60 shadow-sm p-6"
               >
-                <div className="aspect-[4/3] bg-gradient-to-br from-lavender/30 via-background to-sage/20 flex items-center justify-center">
-                  <Icon className="text-foreground/40" size={42} />
+                <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <Icon size={20} className="text-primary" />
                 </div>
-                <div className="p-4 flex-1 flex flex-col gap-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="text-sm font-medium text-card-foreground truncate" title={m.name}>
-                      {m.name}
-                    </p>
-                    <StatusBadge status={statusMap[m.status]} />
-                  </div>
-                  <p className="text-[10px] tracking-[0.18em] uppercase text-gold">{m.category}</p>
-                  <div className="flex items-center gap-3 text-[11px] text-foreground/55">
-                    <span className="px-2 py-0.5 rounded-full bg-muted">{m.type}</span>
-                    <span>{m.size}</span>
-                  </div>
-                  <div className="flex gap-2 mt-auto pt-2">
-                    <Button variant="outline" size="sm" className="flex-1 h-8 text-xs">
-                      <Eye size={12} /> Preview
-                    </Button>
-                    <Button size="sm" className="flex-1 h-8 text-xs bg-primary hover:bg-primary/90">
-                      <Link2 size={12} /> Attach
-                    </Button>
-                  </div>
-                </div>
+
+                <h3 className="font-display text-lg text-card-foreground">
+                  {item.title}
+                </h3>
+
+                <p className="text-sm text-foreground/65 mt-1 leading-relaxed">
+                  {item.description}
+                </p>
               </div>
             );
           })}
         </div>
-      </div>
+      </section>
 
-      {/* Usage notes */}
-      <div className="bg-lavender/15 border border-lavender/40 rounded-2xl p-6">
-        <p className="text-[10px] tracking-[0.22em] uppercase text-primary mb-2">A Gentle Note</p>
-        <p className="text-sm text-foreground/75 leading-relaxed">
-          Share editorial photography, brochures, and video that allow Serene Passage International
-          to thoughtfully curate your destination into elevated, customer-facing travel experiences.
+      <section>
+        <p className="text-[10px] tracking-[0.22em] uppercase text-gold mb-3">
+          Curated By Category
         </p>
+
+        <div className="flex flex-wrap gap-2">
+          {categories.map((category) => (
+            <span
+              key={category}
+              className="px-4 py-1.5 rounded-full border border-border/70 bg-card text-xs tracking-wide text-foreground/75"
+            >
+              {category}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <SectionHeader
+          eyebrow="Examples"
+          title="Sample Asset Types"
+          description="These examples help partners understand the kinds of materials that support better curation."
+        />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {sampleAssets.map((asset) => (
+            <div
+              key={asset.name}
+              className="bg-card rounded-2xl border border-border/60 shadow-sm overflow-hidden"
+            >
+              <div className="aspect-[4/3] bg-gradient-to-br from-lavender/30 via-background to-sage/20 flex items-center justify-center">
+                {asset.type.includes('MP4') ? (
+                  <FileVideo className="text-foreground/40" size={38} />
+                ) : asset.type.includes('PDF') || asset.type.includes('XLS') ? (
+                  <FileText className="text-foreground/40" size={38} />
+                ) : (
+                  <FileImage className="text-foreground/40" size={38} />
+                )}
+              </div>
+
+              <div className="p-4">
+                <p className="font-display text-base text-card-foreground">
+                  {asset.name}
+                </p>
+
+                <p className="text-[10px] tracking-[0.18em] uppercase text-gold mt-2">
+                  {asset.category}
+                </p>
+
+                <p className="text-xs text-foreground/55 mt-1">
+                  {asset.type}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="bg-lavender/15 border border-lavender/40 rounded-2xl p-6">
+        <div className="flex items-start gap-3">
+          <Link2 size={18} className="text-primary shrink-0 mt-1" />
+
+          <p className="text-sm text-foreground/75 leading-relaxed">
+            During this early access phase, partners may also send Dropbox, Google Drive, media kit,
+            or website links directly to Serene Passage International for review and organization.
+          </p>
+        </div>
       </div>
     </div>
   );

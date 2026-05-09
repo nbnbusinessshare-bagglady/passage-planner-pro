@@ -1,183 +1,184 @@
-import type { ReactNode } from 'react';
+// FILE: src/pages/vendor/VendorStubPage.tsx
+
 import { useLocation } from 'react-router-dom';
+import {
+  Sparkles,
+  CalendarHeart,
+  Tag,
+  Handshake,
+  Globe2,
+  Clock,
+  LockKeyhole,
+} from 'lucide-react';
+
 import { SectionHeader } from '@/components/vendor/VendorLayout';
-import { Sparkles, CalendarHeart, Tag, Handshake, Globe2, MapPin, Award, Users } from 'lucide-react';
+
+import destinationEventsHero from '@/assets/partner-portal/destination-events-showcase.png';
+import partnerRelationshipsHero from '@/assets/partner-portal/partner-relationships-meeting.png';
+import industryPartnershipsHero from '@/assets/partner-portal/industry-partnerships-global-network.png';
+
+type PageMeta = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  icon: React.ElementType;
+  image?: string;
+  features: string[];
+};
 
 const Card = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`bg-card rounded-2xl border border-border/60 shadow-sm p-6 ${className}`}>{children}</div>
+  <div className={`bg-card rounded-2xl border border-border/60 shadow-sm p-6 ${className}`}>
+    {children}
+  </div>
 );
 
-const EventsView = () => {
-  const events = [
-    { title: 'Her Glow Brunch + Preview Night', date: 'Feb 22, 2026', location: 'Atlanta, GA', tag: 'Partner Showcase' },
-    { title: 'Caribbean Edit · Travel Edit Showcase', date: 'Apr 11, 2026', location: 'Virtual', tag: 'Destination Spotlight' },
-    { title: 'Sedona Wellness Preview', date: 'May 09, 2026', location: 'Sedona, AZ', tag: 'Retreat Collaboration' },
-  ];
+const pageContent: Record<string, PageMeta> = {
+  '/vendor/events': {
+    eyebrow: 'Early Access',
+    title: 'Destination Events',
+    description:
+      'This section will help partners share events, showcases, hosted experiences, and destination-specific opportunities for future Serene Passage collections.',
+    icon: CalendarHeart,
+    image: destinationEventsHero,
+    features: [
+      'Destination showcases',
+      'Retreat preview events',
+      'Wedding and romance travel events',
+      'Partner-hosted experiences',
+    ],
+  },
+  '/vendor/promotions': {
+    eyebrow: 'Early Access',
+    title: 'Seasonal Promotions',
+    description:
+      'This section will support seasonal partner offers, special rates, limited-time promotions, and curated travel campaigns.',
+    icon: Tag,
+    features: [
+      'Seasonal rates and offers',
+      'Limited-time packages',
+      'Group travel promotions',
+      'Luxury escape campaigns',
+    ],
+  },
+  '/vendor/relationships': {
+    eyebrow: 'Early Access',
+    title: 'Partner Relationships',
+    description:
+      'This section will help Serene Passage track partner status, company contacts, collaboration history, and long-term relationship opportunities.',
+    icon: Handshake,
+    image: partnerRelationshipsHero,
+    features: [
+      'Partner status tracking',
+      'Primary and backup contacts',
+      'Follow-up notes',
+      'Account reset support',
+    ],
+  },
+  '/vendor/industry': {
+    eyebrow: 'Early Access',
+    title: 'Industry Events & Partnerships',
+    description:
+      'This section will organize conference connections, tourism board relationships, destination wedding events, supplier meetings, and travel industry opportunities.',
+    icon: Globe2,
+    image: industryPartnershipsHero,
+    features: [
+      'Conference contacts',
+      'Tourism board relationships',
+      'Supplier meetings',
+      'Destination partnership notes',
+    ],
+  },
+};
+
+const defaultMeta: PageMeta = {
+  eyebrow: 'Coming Soon',
+  title: 'Partner Feature',
+  description: 'This section is being developed as part of the Serene Passage Partner Suite.',
+  icon: Sparkles,
+  features: ['Partner tools', 'Collaboration support', 'Curated workflow', 'Future expansion'],
+};
+
+const VendorStubPage = () => {
+  const { pathname } = useLocation();
+  const meta: PageMeta = pageContent[pathname] ?? defaultMeta;
+  const Icon = meta.icon;
+
   return (
-    <div className="space-y-4">
-      {events.map((e) => (
-        <Card key={e.title}>
-          <div className="flex items-start gap-4">
-            <div className="h-11 w-11 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
-              <CalendarHeart size={18} className="text-gold" />
+    <div className="space-y-8">
+      {meta.image ? (
+        <section className="relative overflow-hidden rounded-3xl border border-border/60 shadow-sm min-h-[340px] bg-[hsl(0,0%,8%)]">
+          <img src={meta.image} alt={meta.title} className="absolute inset-0 h-full w-full object-cover" />
+
+          <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/55 to-black/18" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-transparent to-black/20" />
+
+          <div className="relative z-10 p-6 md:p-10 min-h-[340px] flex items-center">
+            <div className="max-w-3xl">
+              <p className="text-[10px] tracking-[0.32em] uppercase text-gold mb-4">{meta.eyebrow}</p>
+              <h1 className="font-display text-3xl md:text-5xl text-cream leading-tight">{meta.title}</h1>
+              <p className="text-sm md:text-base text-cream/75 mt-4 leading-relaxed max-w-2xl">
+                {meta.description}
+              </p>
             </div>
-            <div className="flex-1">
-              <p className="text-[10px] tracking-[0.22em] uppercase text-gold mb-1">{e.tag}</p>
-              <h3 className="font-display text-lg text-card-foreground">{e.title}</h3>
-              <p className="text-xs text-foreground/60 mt-1">{e.date} · {e.location}</p>
-            </div>
-            <button className="text-xs tracking-wide uppercase text-primary hover:underline">Share Destination Experience</button>
           </div>
-        </Card>
-      ))}
-    </div>
-  );
-};
+        </section>
+      ) : (
+        <SectionHeader eyebrow={meta.eyebrow} title={meta.title} description={meta.description} />
+      )}
 
-const PromotionsView = () => {
-  const promos = [
-    { title: 'Spring Wellness Collection', window: 'Mar – May 2026', note: 'Co-curated seasonal feature with our wellness partners.' },
-    { title: 'Summer Caribbean Romance Edit', window: 'Jun – Aug 2026', note: 'Romance travel highlights across resort partners.' },
-    { title: 'Winter Cultural Escapes', window: 'Nov – Feb 2026', note: 'Cultural immersion features curated by destination.' },
-  ];
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {promos.map((p) => (
-        <Card key={p.title}>
-          <div className="flex items-start gap-3">
-            <Tag size={18} className="text-gold mt-1 shrink-0" />
-            <div className="flex-1">
-              <h3 className="font-display text-lg text-card-foreground">{p.title}</h3>
-              <p className="text-[11px] tracking-[0.18em] uppercase text-foreground/55 mt-1">{p.window}</p>
-              <p className="text-sm text-foreground/70 mt-3 leading-relaxed">{p.note}</p>
-              <button className="mt-4 text-xs tracking-wide uppercase text-primary hover:underline">Share Seasonal Promotion</button>
-            </div>
+      <Card className="bg-gradient-to-br from-card via-card to-cream">
+        <div className="flex flex-col md:flex-row md:items-center gap-5">
+          <div className="h-14 w-14 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+            <Icon className="text-gold" size={24} />
           </div>
-        </Card>
-      ))}
-    </div>
-  );
-};
 
-const RelationshipsView = () => {
-  const tiers = [
-    { label: 'Preferred Partner Tier', value: 'Curator Circle', icon: Award },
-    { label: 'Destination Specialties', value: 'Sedona · Cartagena · Anguilla', icon: MapPin },
-    { label: 'Collaboration History', value: '14 curated experiences', icon: Handshake },
-    { label: 'Active Travelers Reached', value: '2,481 this season', icon: Users },
-  ];
-  return (
-    <div className="space-y-6">
-      <Card className="bg-gradient-to-br from-card to-cream">
-        <p className="text-[10px] tracking-[0.22em] uppercase text-gold mb-2">Relationship Status</p>
-        <h3 className="font-display text-2xl text-card-foreground">Maison Voyage · Trusted Destination Partner</h3>
-        <p className="font-script text-lg text-foreground/70 mt-2">Collaborating with Serene Passage since 2024</p>
-        <p className="text-sm text-foreground/70 mt-4 max-w-2xl leading-relaxed">
-          Exclusive travel opportunities curated through meaningful industry relationships.
-          Your contributions help shape elevated, customer-facing experiences worldwide.
-        </p>
+          <div className="flex-1">
+            <p className="text-[10px] tracking-[0.24em] uppercase text-gold mb-2">
+              Partner Suite Expansion
+            </p>
+            <h2 className="font-display text-2xl text-card-foreground">
+              This feature is being prepared for partner rollout.
+            </h2>
+            <p className="text-sm text-foreground/65 mt-2 max-w-2xl leading-relaxed">
+              Serene Passage International is currently developing this section to support a more organized,
+              professional, and relationship-driven partner experience.
+            </p>
+          </div>
+        </div>
       </Card>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {tiers.map((t) => {
-          const Icon = t.icon;
-          return (
-            <Card key={t.label}>
-              <div className="flex items-start gap-3">
-                <div className="h-10 w-10 rounded-full border border-gold/40 flex items-center justify-center text-gold shrink-0">
-                  <Icon size={16} />
-                </div>
-                <div>
-                  <p className="text-[10px] tracking-[0.22em] uppercase text-foreground/55">{t.label}</p>
-                  <p className="font-display text-lg text-card-foreground mt-1">{t.value}</p>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
 
-const IndustryView = () => {
-  const events = [
-    { title: 'IADWP Jamaica 2026', date: 'May 2026', region: 'Montego Bay, Jamaica', note: 'Destination weddings & romance travel networking.' },
-    { title: 'Virtuoso Travel Week', date: 'Aug 2026', region: 'Las Vegas, NV', note: 'Global luxury hospitality partnerships and curated showcases.' },
-    { title: 'ILTM Cannes', date: 'Dec 2026', region: 'Cannes, France', note: 'International luxury travel market — destination collaborations.' },
-    { title: 'Caribbean Travel Marketplace', date: 'Jan 2027', region: 'Bahamas', note: 'Caribbean tourism boards & resort partnerships.' },
-  ];
-  return (
-    <div className="space-y-6">
-      <Card>
-        <p className="text-[10px] tracking-[0.22em] uppercase text-gold mb-2">Global Collaborations</p>
-        <h3 className="font-display text-xl text-card-foreground">Where we gather, listen, and build relationships</h3>
-        <p className="text-sm text-foreground/70 mt-3 max-w-2xl leading-relaxed">
-          Serene Passage International invests in meaningful presence across the global travel
-          industry — building trusted relationships with tourism boards, resort groups, and
-          destination experts who help shape our curated experiences.
-        </p>
-      </Card>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {events.map((e) => (
-          <Card key={e.title}>
+        {meta.features.map((feature) => (
+          <Card key={feature}>
             <div className="flex items-start gap-3">
-              <Globe2 size={18} className="text-gold mt-1 shrink-0" />
+              <Sparkles size={17} className="text-gold shrink-0 mt-1" />
               <div>
-                <h4 className="font-display text-lg text-card-foreground">{e.title}</h4>
-                <p className="text-[11px] tracking-[0.18em] uppercase text-foreground/55 mt-1">{e.date} · {e.region}</p>
-                <p className="text-sm text-foreground/70 mt-3 leading-relaxed">{e.note}</p>
+                <h3 className="font-display text-lg text-card-foreground">{feature}</h3>
+                <p className="text-sm text-foreground/60 mt-1">
+                  Planned as part of the expanded partner collaboration workflow.
+                </p>
               </div>
             </div>
           </Card>
         ))}
       </div>
-    </div>
-  );
-};
 
-const titles: Record<string, { eyebrow: string; title: string; description: string; render?: () => ReactNode }> = {
-  '/vendor/events': {
-    eyebrow: 'Destination Events',
-    title: 'Destination Events',
-    description: 'Curated travel events shared with our partner network.',
-    render: EventsView,
-  },
-  '/vendor/promotions': {
-    eyebrow: 'Seasonal Promotions',
-    title: 'Seasonal Promotions',
-    description: 'Share seasonal opportunities to be curated into customer-facing collections.',
-    render: PromotionsView,
-  },
-  '/vendor/relationships': {
-    eyebrow: 'Partnership',
-    title: 'Partner Relationships',
-    description: 'Your standing within the Serene Passage curator network.',
-    render: RelationshipsView,
-  },
-  '/vendor/industry': {
-    eyebrow: 'Global Network',
-    title: 'Industry Events & Partnerships',
-    description: 'Conferences, tourism partnerships, and destination relationships we cultivate worldwide.',
-    render: IndustryView,
-  },
-};
-
-const VendorStubPage = () => {
-  const { pathname } = useLocation();
-  const meta = titles[pathname] ?? { eyebrow: 'Coming Soon', title: 'Section', description: 'This view is being curated.' };
-  return (
-    <div className="space-y-6">
-      <SectionHeader eyebrow={meta.eyebrow} title={meta.title} description={meta.description} />
-      {meta.render ? (
-        meta.render()
-      ) : (
-        <div className="bg-card rounded-2xl border border-border/60 shadow-sm p-12 text-center">
-          <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-gold/10 mb-4">
-            <Sparkles className="text-gold" size={20} />
+      <Card>
+        <div className="flex flex-col md:flex-row md:items-center gap-4">
+          <div className="flex items-center gap-3">
+            <Clock size={18} className="text-primary shrink-0" />
+            <div>
+              <h3 className="font-display text-lg text-card-foreground">Early Access Phase</h3>
+              <p className="text-sm text-foreground/60">Some partner tools are being introduced in stages.</p>
+            </div>
           </div>
-          <p className="font-script text-xl text-foreground/70">This section is being curated.</p>
+
+          <div className="md:ml-auto flex items-center gap-2 rounded-full bg-muted px-4 py-2">
+            <LockKeyhole size={14} className="text-foreground/50" />
+            <span className="text-xs tracking-wide uppercase text-foreground/55">Coming Soon</span>
+          </div>
         </div>
-      )}
+      </Card>
     </div>
   );
 };
