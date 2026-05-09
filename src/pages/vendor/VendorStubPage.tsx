@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { SectionHeader } from '@/components/vendor/VendorLayout';
 import { Sparkles, CalendarHeart, Tag, Handshake, Globe2, MapPin, Award, Users } from 'lucide-react';
@@ -134,7 +135,7 @@ const IndustryView = () => {
   );
 };
 
-const titles: Record<string, { eyebrow: string; title: string; description: string; render?: () => React.ReactNode }> = {
+const titles: Record<string, { eyebrow: string; title: string; description: string; render?: () => ReactNode }> = {
   '/vendor/events': {
     eyebrow: 'Destination Events',
     title: 'Destination Events',
