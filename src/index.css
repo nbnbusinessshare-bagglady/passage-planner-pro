@@ -1,3 +1,5 @@
+/* FILE: src/index.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600&display=swap');
 
 @tailwind base;
@@ -15,8 +17,9 @@
     --popover: 0 0% 100%;
     --popover-foreground: 30 6% 40%;
 
-    --primary: 276 25% 57%;
-    --primary-foreground: 0 0% 100%;
+    /* Soft faded mauve instead of strong purple */
+    --primary: 318 13% 87%;
+    --primary-foreground: 320 6% 42%;
 
     --secondary: 105 12% 67%;
     --secondary-foreground: 0 0% 100%;
@@ -24,35 +27,38 @@
     --muted: 34 33% 89%;
     --muted-foreground: 30 6% 55%;
 
-    --accent: 349 35% 74%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 349 20% 86%;
+    --accent-foreground: 320 6% 42%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 34 20% 85%;
     --input: 34 20% 85%;
-    --ring: 276 25% 57%;
+
+    /* Softer focus ring */
+    --ring: 43 38% 74%;
 
     --radius: 0.75rem;
 
-    --gold: 43 65% 52%;
-    --gold-foreground: 0 0% 100%;
+    /* Champagne gold instead of mustard */
+    --gold: 43 48% 76%;
+    --gold-foreground: 37 23% 35%;
 
     --sage: 105 12% 67%;
     --cream: 34 33% 93%;
-    --lavender: 276 25% 77%;
-    --rose: 349 35% 74%;
+    --lavender: 318 13% 88%;
+    --rose: 349 20% 86%;
     --taupe: 30 6% 50%;
 
     --sidebar-background: 34 33% 95%;
     --sidebar-foreground: 30 6% 50%;
-    --sidebar-primary: 276 25% 57%;
-    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-primary: 318 13% 87%;
+    --sidebar-primary-foreground: 320 6% 42%;
     --sidebar-accent: 105 12% 90%;
     --sidebar-accent-foreground: 30 6% 40%;
     --sidebar-border: 34 20% 85%;
-    --sidebar-ring: 276 25% 57%;
+    --sidebar-ring: 43 38% 74%;
   }
 }
 
@@ -66,7 +72,12 @@
     font-family: 'Source Sans 3', sans-serif;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: 'Playfair Display', serif;
     @apply text-card-foreground;
   }
@@ -87,11 +98,11 @@
   }
 
   .section-lavender {
-    background-color: hsl(var(--lavender) / 0.12);
+    background-color: hsl(var(--lavender) / 0.18);
   }
 
   .text-gold {
-    color: hsl(var(--gold));
+    color: hsl(var(--gold-foreground));
   }
 
   .bg-gold {
@@ -118,6 +129,7 @@
       transform: translateY(20px);
       filter: blur(4px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -126,7 +138,14 @@
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; filter: blur(4px); }
-    to { opacity: 1; filter: blur(0); }
+    from {
+      opacity: 0;
+      filter: blur(4px);
+    }
+
+    to {
+      opacity: 1;
+      filter: blur(0);
+    }
   }
 }
