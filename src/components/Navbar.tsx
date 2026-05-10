@@ -14,7 +14,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { to: '/', label: 'Home' },
   { to: '/womens-retreats', label: "Women's Retreats" },
-  { to: '/build-your-trip', label: 'Group Trips' },
+  { to: '/group-trips', label: 'Group Trips' },
   { to: '/travel-deals', label: 'Curated Packages' },
   { to: '/build-your-trip', label: 'Build Your Trip' },
   { to: '/travel-info', label: 'Travel Info' },
@@ -39,7 +39,9 @@ export const Navbar = () => {
 
         <div className="hidden lg:flex items-center justify-center flex-1 gap-6 xl:gap-8">
           {navItems.map((link) => {
-            const active = location.pathname === link.to;
+            const active =
+              location.pathname === link.to ||
+              (link.to === '/group-trips' && location.pathname === '/group-travel');
 
             return (
               <Link
@@ -77,53 +79,59 @@ export const Navbar = () => {
       {open && (
         <div className="lg:hidden bg-card border-t border-border/60 animate-fade-in max-h-[calc(100vh-6rem)] overflow-y-auto">
           <div className="container py-4 flex flex-col">
-            {navItems.map((link) => (
-              <div key={link.label} className="border-b border-border/40 last:border-0">
-                <div className="flex items-center justify-between">
-                  <Link
-                    to={link.to}
-                    onClick={() => setOpen(false)}
-                    className={`flex-1 py-3 text-sm font-medium tracking-[0.08em] uppercase ${
-                      location.pathname === link.to ? 'text-gold' : 'text-foreground/85'
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
+            {navItems.map((link) => {
+              const active =
+                location.pathname === link.to ||
+                (link.to === '/group-trips' && location.pathname === '/group-travel');
 
-                  {link.children && (
-                    <button
-                      onClick={() =>
-                        setMobileExpanded(mobileExpanded === link.label ? null : link.label)
-                      }
-                      className="p-2 text-foreground/60"
-                      aria-label="Expand"
+              return (
+                <div key={link.label} className="border-b border-border/40 last:border-0">
+                  <div className="flex items-center justify-between">
+                    <Link
+                      to={link.to}
+                      onClick={() => setOpen(false)}
+                      className={`flex-1 py-3 text-sm font-medium tracking-[0.08em] uppercase ${
+                        active ? 'text-gold' : 'text-foreground/85'
+                      }`}
                     >
-                      <ChevronDown
-                        size={16}
-                        className={`transition-transform ${
-                          mobileExpanded === link.label ? 'rotate-180' : ''
-                        }`}
-                      />
-                    </button>
+                      {link.label}
+                    </Link>
+
+                    {link.children && (
+                      <button
+                        onClick={() =>
+                          setMobileExpanded(mobileExpanded === link.label ? null : link.label)
+                        }
+                        className="p-2 text-foreground/60"
+                        aria-label="Expand"
+                      >
+                        <ChevronDown
+                          size={16}
+                          className={`transition-transform ${
+                            mobileExpanded === link.label ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+                    )}
+                  </div>
+
+                  {link.children && mobileExpanded === link.label && (
+                    <div className="pb-3 pl-3 flex flex-col gap-1">
+                      {link.children.map((child) => (
+                        <Link
+                          key={child.label}
+                          to={child.to}
+                          onClick={() => setOpen(false)}
+                          className="py-1.5 text-xs text-foreground/70 hover:text-gold transition-colors"
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
                   )}
                 </div>
-
-                {link.children && mobileExpanded === link.label && (
-                  <div className="pb-3 pl-3 flex flex-col gap-1">
-                    {link.children.map((child) => (
-                      <Link
-                        key={child.label}
-                        to={child.to}
-                        onClick={() => setOpen(false)}
-                        className="py-1.5 text-xs text-foreground/70 hover:text-gold transition-colors"
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+              );
+            })}
 
             <Link
               to="/partner-portal"

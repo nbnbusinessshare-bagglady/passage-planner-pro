@@ -14,6 +14,7 @@ import BuildYourTripPage from "./pages/BuildYourTripPage";
 import TravelDealsPage from "./pages/TravelDealsPage";
 import TravelInfoPage from "./pages/TravelInfoPage";
 import ContactPage from "./pages/ContactPage";
+import GroupTripPage from "./pages/GroupTripPage";
 import NotFound from "./pages/NotFound";
 
 import VendorLoginPage from "./pages/vendor/VendorLoginPage";
@@ -37,12 +38,16 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+
       <BrowserRouter>
         <Navbar />
+
         <main>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/womens-retreats" element={<WomensRetreatsPage />} />
+            <Route path="/group-trips" element={<GroupTripPage />} />
+            <Route path="/group-travel" element={<GroupTripPage />} />
             <Route path="/build-your-trip" element={<BuildYourTripPage />} />
             <Route path="/travel-deals" element={<TravelDealsPage />} />
             <Route path="/travel-info" element={<TravelInfoPage />} />
@@ -70,6 +75,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
+
         <Footer />
       </BrowserRouter>
     </TooltipProvider>

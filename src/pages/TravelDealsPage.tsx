@@ -1,6 +1,8 @@
 // FILE: src/pages/TravelDealsPage.tsx
 
 import { ScrollReveal } from '@/components/ScrollReveal';
+
+import curatedPackagesHero from '@/assets/heroes/curated-packages-hero.jpg';
 import dealResort from '@/assets/deal-resort.jpg';
 import dealOverwater from '@/assets/deal-overwater.jpg';
 import anguillaImg from '@/assets/anguilla-beach.jpg';
@@ -20,16 +22,36 @@ const deals = [
 const TravelDealsPage = () => {
   return (
     <div className="pt-20">
-      <section className="py-16 md:py-24 section-cream text-center">
-        <div className="container">
-          <ScrollReveal>
-            <h1 className="text-3xl md:text-5xl font-display mb-4" style={{ lineHeight: 1.15 }}>
-              Travel Deals
-            </h1>
-            <p className="font-script text-xl md:text-2xl text-foreground/80">
-              Exclusive Deals & Limited-Time Getaways
-            </p>
-          </ScrollReveal>
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/30 z-10" />
+
+        <img
+          src={curatedPackagesHero}
+          alt="Curated travel packages"
+          className="w-full h-[340px] md:h-[430px] object-cover"
+        />
+
+        <div className="absolute inset-0 z-20 flex items-center justify-center">
+          <div className="container">
+            <ScrollReveal>
+              <div className="max-w-2xl text-center mx-auto">
+                <p className="text-[11px] tracking-[0.28em] uppercase text-white/75 mb-4">
+                  Curated · Approved · Ready
+                </p>
+
+                <h1
+                  className="text-4xl md:text-6xl font-display text-white mb-5"
+                  style={{ lineHeight: 1.05 }}
+                >
+                  Travel Deals
+                </h1>
+
+                <p className="font-script text-2xl md:text-3xl text-white/90">
+                  Exclusive Deals & Limited-Time Getaways
+                </p>
+              </div>
+            </ScrollReveal>
+          </div>
         </div>
       </section>
 
@@ -40,17 +62,32 @@ const TravelDealsPage = () => {
               <ScrollReveal key={deal.destination} delay={i * 80}>
                 <div className="bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <img src={deal.image} alt={deal.destination} className="w-full h-full object-cover" />
+                    <img
+                      src={deal.image}
+                      alt={deal.destination}
+                      className="w-full h-full object-cover"
+                    />
+
                     <span className="absolute top-3 right-3 px-3 py-1 rounded-full bg-[#E9DDBF] text-[#6F6044] text-xs font-semibold">
                       {deal.tag}
                     </span>
                   </div>
+
                   <div className="p-6">
-                    <h3 className="font-display text-lg mb-3">{deal.destination}</h3>
+                    <h3 className="font-display text-lg mb-3">
+                      {deal.destination}
+                    </h3>
+
                     <div className="flex items-baseline gap-3 mb-4">
-                      <span className="text-foreground/40 line-through text-sm">{deal.regular}</span>
-                      <span className="text-2xl font-semibold text-[#B89A58]">{deal.our}</span>
+                      <span className="text-foreground/40 line-through text-sm">
+                        {deal.regular}
+                      </span>
+
+                      <span className="text-2xl font-semibold text-[#B89A58]">
+                        {deal.our}
+                      </span>
                     </div>
+
                     <button className="w-full py-3 rounded-lg bg-[#E2DCE1] text-[#6F666B] font-medium hover:bg-[#D8CDD3] active:scale-[0.97] transition-all">
                       View Deal
                     </button>

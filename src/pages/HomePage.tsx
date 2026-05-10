@@ -14,96 +14,97 @@ const HomePage = () => {
   return (
     <div>
       {/* Hero */}
-<section className="relative min-h-[90vh] flex items-center overflow-hidden bg-[hsl(34,33%,93%)] pt-24">
-  <div className="absolute inset-0 bg-gradient-to-br from-cream via-card to-[hsl(38,45%,86%)]" />
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-[hsl(34,33%,93%)] pt-24">
+        <div className="absolute inset-0 bg-gradient-to-br from-cream via-card to-[hsl(38,45%,86%)]" />
 
-  <div className="relative z-10 container py-16 md:py-24">
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-      {/* Left Content */}
-      <div className="text-center lg:text-left">
-        <p className="text-[10px] md:text-xs tracking-[0.34em] uppercase text-gold mb-5 animate-fade-up">
-          Original Journeys. Meaningful Connections.
-        </p>
-
-        <h1
-          className="font-display text-4xl md:text-6xl lg:text-7xl font-semibold mb-5 animate-fade-up"
-          style={{ color: 'hsl(0, 0%, 12%)', lineHeight: 1.05 }}
-        >
-          Travel Experiences Curated for You
-        </h1>
-
-        <p className="font-script text-2xl md:text-3xl text-foreground/70 mb-4 animate-fade-up">
-          Escape. Explore. Experience.
-        </p>
-
-        <p className="text-sm md:text-base max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed text-foreground/70 animate-fade-up">
-          Thoughtfully crafted escapes and group journeys designed around what matters most to you.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8 animate-fade-up">
-          <Link
-            to="/build-your-trip"
-            className="inline-flex items-center justify-center min-w-[190px] py-3.5 px-7 rounded-full bg-primary text-primary-foreground text-sm tracking-[0.14em] uppercase font-medium hover:opacity-90 transition-all"
-          >
-            Start Your Journey
-          </Link>
-
-          <Link
-            to="/travel-deals"
-            className="inline-flex items-center justify-center min-w-[190px] py-3.5 px-7 rounded-full border border-gold/70 text-gold text-sm tracking-[0.14em] uppercase font-medium hover:bg-gold hover:text-primary-foreground transition-all"
-          >
-            Explore Experiences
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl mx-auto lg:mx-0">
-          {[
-            { to: '/womens-retreats', label: "Women's Retreats" },
-            { to: '/build-your-trip', label: 'Build Your Trip' },
-            { to: '/travel-deals', label: 'Curated Packages' },
-          ].map((item) => (
-            <Link
-              key={item.label}
-              to={item.to}
-              className="rounded-2xl bg-card/80 border border-border/60 px-4 py-4 text-center shadow-sm hover:border-gold/50 hover:shadow-md transition-all"
-            >
-              <span className="text-[10px] tracking-[0.2em] uppercase text-gold">
-                Explore
-              </span>
-              <p className="font-display text-base text-card-foreground mt-1">
-                {item.label}
+        <div className="relative z-10 container py-16 md:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+            {/* Left Content */}
+            <div className="text-center lg:text-left">
+              <p className="text-[10px] md:text-xs tracking-[0.34em] uppercase text-gold mb-5 animate-fade-up">
+                Original Journeys. Meaningful Connections.
               </p>
-            </Link>
-          ))}
+
+              <h1
+                className="font-display text-4xl md:text-6xl lg:text-7xl font-semibold mb-5 animate-fade-up"
+                style={{ color: 'hsl(0, 0%, 12%)', lineHeight: 1.05 }}
+              >
+                Travel Experiences Curated for You
+              </h1>
+
+              <p className="font-script text-2xl md:text-3xl text-foreground/70 mb-4 animate-fade-up">
+                Escape. Explore. Experience.
+              </p>
+
+              <p className="text-sm md:text-base max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed text-foreground/70 animate-fade-up">
+                Thoughtfully crafted escapes and group journeys designed around what matters most to you.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8 animate-fade-up">
+                <Link
+                  to="/build-your-trip"
+                  className="inline-flex items-center justify-center min-w-[190px] py-3.5 px-7 rounded-full bg-primary text-primary-foreground text-sm tracking-[0.14em] uppercase font-medium hover:opacity-90 transition-all"
+                >
+                  Start Your Journey
+                </Link>
+
+                <Link
+                  to="/travel-deals"
+                  className="inline-flex items-center justify-center min-w-[190px] py-3.5 px-7 rounded-full border border-gold/70 text-gold text-sm tracking-[0.14em] uppercase font-medium hover:bg-gold hover:text-primary-foreground transition-all"
+                >
+                  Explore Experiences
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl mx-auto lg:mx-0">
+                {[
+                  { to: '/womens-retreats', label: "Women's Retreats" },
+                  { to: '/build-your-trip', label: 'Build Your Trip' },
+                  { to: '/travel-deals', label: 'Curated Packages' },
+                ].map((item) => (
+                  <Link
+                    key={item.label}
+                    to={item.to}
+                    className="rounded-2xl bg-card/80 border border-border/60 px-4 py-4 text-center shadow-sm hover:border-gold/50 hover:shadow-md transition-all"
+                  >
+                    <span className="text-[10px] tracking-[0.2em] uppercase text-gold">
+                      Explore
+                    </span>
+
+                    <p className="font-display text-base text-card-foreground mt-1">
+                      {item.label}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Video */}
+            <div className="relative lg:scale-[1.08] xl:scale-[1.12] origin-center">
+              <div className="relative rounded-[2.2rem] overflow-hidden border border-gold/25 shadow-[0_30px_90px_-24px_rgba(0,0,0,0.38)] bg-black">
+                <video
+                  className="w-full aspect-[16/10] object-cover"
+                  src={heroVideo}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                />
+
+                {/* Cinematic luxury overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/28 via-transparent to-black/10 pointer-events-none" />
+              </div>
+
+              {/* Subtle luxury frame glow */}
+              <div className="absolute inset-0 rounded-[2.2rem] ring-1 ring-gold/20 pointer-events-none" />
+
+              {/* Soft background glow */}
+              <div className="absolute -inset-6 bg-gold/5 blur-3xl -z-10 rounded-full" />
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Right Video */}
-<div className="relative lg:scale-[1.08] xl:scale-[1.12] origin-center">
-  <div className="relative rounded-[2.2rem] overflow-hidden border border-gold/25 shadow-[0_30px_90px_-24px_rgba(0,0,0,0.38)] bg-black">
-    <video
-      className="w-full aspect-[16/10] object-cover"
-      src={heroVideo}
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="auto"
-    />
-    
-    {/* cinematic luxury overlay */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/28 via-transparent to-black/10 pointer-events-none" />
-  </div>
-
-  {/* subtle luxury frame glow */}
-  <div className="absolute inset-0 rounded-[2.2rem] ring-1 ring-gold/20 pointer-events-none" />
-
-  {/* soft background glow */}
-  <div className="absolute -inset-6 bg-gold/5 blur-3xl -z-10 rounded-full" />
-</div>
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* How would you like to travel? */}
       <section className="py-16 md:py-24 section-cream">
@@ -296,18 +297,27 @@ const HomePage = () => {
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-2 mt-5">
-                      <button className="flex-1 h-10 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:opacity-90 transition-all">
-                        View Details
-                      </button>
+  <Link
+    to="/travel-deals"
+    className="flex-1 h-10 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:opacity-90 transition-all inline-flex items-center justify-center"
+  >
+    View Details
+  </Link>
 
-                      <button className="flex-1 h-10 rounded-lg border border-border bg-card text-xs font-medium hover:bg-muted transition-colors">
-                        Request This Trip
-                      </button>
+  <Link
+    to="/group-travel"
+    className="flex-1 h-10 rounded-lg border border-border bg-card text-xs font-medium hover:bg-muted transition-colors inline-flex items-center justify-center"
+  >
+    Plan Group Trip
+  </Link>
 
-                      <button className="flex-1 h-10 rounded-lg bg-gold/90 text-primary-foreground text-xs font-medium hover:bg-gold transition-colors">
-                        Join Interest List
-                      </button>
-                    </div>
+  <Link
+    to="/contact"
+    className="flex-1 h-10 rounded-lg bg-gold/90 text-primary-foreground text-xs font-medium hover:bg-gold transition-colors inline-flex items-center justify-center"
+  >
+    Join Interest List
+  </Link>
+</div>
                   </div>
                 </article>
               </ScrollReveal>
