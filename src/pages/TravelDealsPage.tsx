@@ -1,3 +1,5 @@
+// FILE: src/pages/TravelDealsPage.tsx
+
 import { ScrollReveal } from '@/components/ScrollReveal';
 import dealResort from '@/assets/deal-resort.jpg';
 import dealOverwater from '@/assets/deal-overwater.jpg';
@@ -39,7 +41,7 @@ const TravelDealsPage = () => {
                 <div className="bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img src={deal.image} alt={deal.destination} className="w-full h-full object-cover" />
-                    <span className="absolute top-3 right-3 px-3 py-1 rounded-full bg-gold text-primary-foreground text-xs font-semibold">
+                    <span className="absolute top-3 right-3 px-3 py-1 rounded-full bg-[#E9DDBF] text-[#6F6044] text-xs font-semibold">
                       {deal.tag}
                     </span>
                   </div>
@@ -47,9 +49,9 @@ const TravelDealsPage = () => {
                     <h3 className="font-display text-lg mb-3">{deal.destination}</h3>
                     <div className="flex items-baseline gap-3 mb-4">
                       <span className="text-foreground/40 line-through text-sm">{deal.regular}</span>
-                      <span className="text-2xl font-semibold text-gold">{deal.our}</span>
+                      <span className="text-2xl font-semibold text-[#B89A58]">{deal.our}</span>
                     </div>
-                    <button className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 active:scale-[0.97] transition-all">
+                    <button className="w-full py-3 rounded-lg bg-[#E2DCE1] text-[#6F666B] font-medium hover:bg-[#D8CDD3] active:scale-[0.97] transition-all">
                       View Deal
                     </button>
                   </div>

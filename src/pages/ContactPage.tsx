@@ -1,3 +1,5 @@
+// FILE: src/pages/ContactPage.tsx
+
 import { useState } from 'react';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
@@ -35,7 +37,7 @@ const ContactPage = () => {
                   required
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full p-4 rounded-lg border border-border bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full p-4 rounded-lg border border-border bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-[#DCC79B]"
                   placeholder="Your full name"
                 />
               </div>
@@ -46,7 +48,7 @@ const ContactPage = () => {
                   required
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full p-4 rounded-lg border border-border bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full p-4 rounded-lg border border-border bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-[#DCC79B]"
                   placeholder="your@email.com"
                 />
               </div>
@@ -55,7 +57,7 @@ const ContactPage = () => {
                 <select
                   value={form.interest}
                   onChange={(e) => setForm({ ...form, interest: e.target.value })}
-                  className="w-full p-4 rounded-lg border border-border bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full p-4 rounded-lg border border-border bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-[#DCC79B]"
                 >
                   <option value="">Select an interest</option>
                   <option>Women's Retreats</option>
@@ -71,13 +73,13 @@ const ContactPage = () => {
                   required
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full min-h-[120px] p-4 rounded-lg border border-border bg-card text-card-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full min-h-[120px] p-4 rounded-lg border border-border bg-card text-card-foreground resize-none focus:outline-none focus:ring-2 focus:ring-[#DCC79B]"
                   placeholder="Tell us about your dream travel experience..."
                 />
               </div>
               <button
                 type="submit"
-                className="w-full py-4 rounded-lg bg-primary text-primary-foreground font-medium text-lg hover:opacity-90 active:scale-[0.97] transition-all"
+                className="w-full py-4 rounded-lg bg-[#E2DCE1] text-[#6F666B] font-medium text-lg hover:bg-[#D8CDD3] active:scale-[0.97] transition-all"
               >
                 Send Message
               </button>

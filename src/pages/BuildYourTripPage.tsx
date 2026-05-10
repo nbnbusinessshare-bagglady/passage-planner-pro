@@ -1,3 +1,5 @@
+// FILE: src/pages/BuildYourTripPage.tsx
+
 import { useState } from 'react';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
@@ -37,13 +39,12 @@ const BuildYourTripPage = () => {
       <section className="py-12 md:py-20">
         <div className="container max-w-lg">
           <ScrollReveal>
-            {/* Progress */}
             <div className="flex gap-1 mb-8">
               {steps.map((_, i) => (
                 <div
                   key={i}
                   className={`flex-1 h-1.5 rounded-full transition-colors ${
-                    i <= step ? 'bg-primary' : 'bg-border'
+                    i <= step ? 'bg-[#E9DDBF]' : 'bg-border'
                   }`}
                 />
               ))}
@@ -57,7 +58,7 @@ const BuildYourTripPage = () => {
                 value={form[current.field] || ''}
                 onChange={(e) => handleChange(e.target.value)}
                 placeholder={current.placeholder}
-                className="w-full min-h-[120px] p-4 rounded-lg border border-border bg-card text-card-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full min-h-[120px] p-4 rounded-lg border border-border bg-card text-card-foreground resize-none focus:outline-none focus:ring-2 focus:ring-[#DCC79B]"
               />
             ) : current.type === 'select' ? (
               <div className="space-y-3">
@@ -67,8 +68,8 @@ const BuildYourTripPage = () => {
                     onClick={() => handleChange(opt)}
                     className={`w-full text-left p-4 rounded-lg border transition-all active:scale-[0.97] ${
                       form[current.field] === opt
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border bg-card hover:border-primary/30'
+                        ? 'border-[#DCC79B] bg-[#F6F0E1] text-[#6F6044]'
+                        : 'border-border bg-card hover:border-[#D8CFC6]'
                     }`}
                   >
                     {opt}
@@ -81,7 +82,7 @@ const BuildYourTripPage = () => {
                 value={form[current.field] || ''}
                 onChange={(e) => handleChange(e.target.value)}
                 placeholder={current.placeholder}
-                className="w-full p-4 rounded-lg border border-border bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full p-4 rounded-lg border border-border bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-[#DCC79B]"
               />
             )}
 
@@ -89,14 +90,14 @@ const BuildYourTripPage = () => {
               {step > 0 && (
                 <button
                   onClick={() => setStep(step - 1)}
-                  className="flex-1 py-3.5 rounded-lg border border-border text-foreground font-medium hover:bg-muted active:scale-[0.97] transition-all"
+                  className="flex-1 py-3.5 rounded-lg border border-[#D8CFC6] bg-card text-[#6F666B] font-medium hover:bg-[#F3EEE8] active:scale-[0.97] transition-all"
                 >
                   Back
                 </button>
               )}
               <button
                 onClick={() => step < steps.length - 1 ? setStep(step + 1) : alert('Thank you! We will be in touch.')}
-                className="flex-1 py-3.5 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 active:scale-[0.97] transition-all"
+                className="flex-1 py-3.5 rounded-lg bg-[#E2DCE1] text-[#6F666B] font-medium hover:bg-[#D8CDD3] active:scale-[0.97] transition-all"
               >
                 {step < steps.length - 1 ? 'Continue' : '✨ Start Planning'}
               </button>

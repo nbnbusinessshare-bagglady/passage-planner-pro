@@ -1,3 +1,5 @@
+// FILE: src/pages/WomensRetreatsPage.tsx
+
 import { useState } from 'react';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import sedonaImg from '@/assets/sedona-retreat.jpg';
@@ -22,13 +24,13 @@ const RetreatCard = ({ title, locations, description, images, pricing, color }: 
   return (
     <ScrollReveal>
       <div className="bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
-        {/* Image slideshow */}
         <div className="relative aspect-[16/9] overflow-hidden">
           <img
             src={images[currentImg]}
             alt={title}
             className="w-full h-full object-cover transition-opacity duration-500"
           />
+
           {images.length > 1 && (
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
               {images.map((_, i) => (
@@ -48,19 +50,21 @@ const RetreatCard = ({ title, locations, description, images, pricing, color }: 
           <div className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-3 ${color}`}>
             {locations}
           </div>
+
           <h3 className="text-2xl font-display mb-2">{title}</h3>
+
           <p className="text-foreground/70 mb-6">{description}</p>
 
           <div className="space-y-3 mb-6">
             {pricing.map((p) => (
               <div key={p.group} className="flex justify-between items-center py-2 border-b border-border last:border-0">
                 <span className="text-sm text-foreground/60">{p.group}</span>
-                <span className="font-medium text-gold">{p.range}</span>
+                <span className="font-medium text-[#B89A58]">{p.range}</span>
               </div>
             ))}
           </div>
 
-          <button className="w-full py-3.5 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 active:scale-[0.97] transition-all">
+          <button className="w-full py-3.5 rounded-lg bg-[#E2DCE1] text-[#6F666B] font-medium hover:bg-[#D8CDD3] active:scale-[0.97] transition-all">
             Reserve Your Spot
           </button>
         </div>
@@ -72,7 +76,6 @@ const RetreatCard = ({ title, locations, description, images, pricing, color }: 
 const WomensRetreatsPage = () => {
   return (
     <div className="pt-20">
-      {/* Header */}
       <section className="py-16 md:py-24 section-lavender text-center">
         <div className="container">
           <ScrollReveal>
@@ -86,7 +89,6 @@ const WomensRetreatsPage = () => {
         </div>
       </section>
 
-      {/* Retreats */}
       <section className="py-12 md:py-20">
         <div className="container max-w-3xl space-y-12">
           <RetreatCard
@@ -98,7 +100,7 @@ const WomensRetreatsPage = () => {
               { group: '10 travelers', range: '$2,200 – $2,600' },
               { group: '20 travelers', range: '$1,900 – $2,300' },
             ]}
-            color="bg-secondary/20 text-secondary"
+            color="bg-[#F3EEE8] text-[#7B6F63]"
           />
 
           <RetreatCard
@@ -110,7 +112,7 @@ const WomensRetreatsPage = () => {
               { group: '10 travelers', range: '$2,800 – $3,400' },
               { group: '20 travelers', range: '$2,400 – $2,900' },
             ]}
-            color="bg-accent/20 text-accent"
+            color="bg-[#E9DDBF] text-[#6F6044]"
           />
 
           <RetreatCard
@@ -122,17 +124,17 @@ const WomensRetreatsPage = () => {
               { group: '10 travelers', range: '$2,000 – $2,500' },
               { group: '20 travelers', range: '$1,700 – $2,200' },
             ]}
-            color="bg-primary/15 text-primary"
+            color="bg-[#E2DCE1] text-[#6F666B]"
           />
         </div>
       </section>
 
-      {/* How It Works */}
       <section className="py-16 md:py-20 section-sage">
         <div className="container max-w-2xl">
           <ScrollReveal>
             <h2 className="text-2xl md:text-3xl font-display text-center mb-10">How It Works</h2>
           </ScrollReveal>
+
           <div className="space-y-4">
             {[
               'Each trip requires a minimum of 10 travelers',
@@ -143,11 +145,12 @@ const WomensRetreatsPage = () => {
             ].map((item, i) => (
               <ScrollReveal key={i} delay={i * 60}>
                 <div className="flex items-start gap-3 bg-card rounded-xl p-4">
-                  <div className="w-6 h-6 rounded-md bg-primary/15 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-6 h-6 rounded-md bg-[#E9DDBF] flex items-center justify-center shrink-0 mt-0.5">
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                      <path d="M3 7L6 10L11 4" stroke="hsl(276, 25%, 57%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M3 7L6 10L11 4" stroke="#6F6044" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
+
                   <p className="text-sm text-foreground/80">{item}</p>
                 </div>
               </ScrollReveal>
