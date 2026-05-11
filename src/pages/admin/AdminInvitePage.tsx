@@ -1,14 +1,17 @@
-// FILE: src/pages/vendor/VendorInvitePage.tsx
+// FILE: src/pages/admin/AdminInvitePage.tsx
 
 import { useMemo, useState } from "react";
 import {
   Building2,
   CheckCircle2,
   Copy,
+  FileUp,
   Globe2,
   Languages,
   Mail,
   MapPin,
+  MessageSquareText,
+  Save,
   ShieldCheck,
   Sparkles,
   UserPlus,
@@ -53,7 +56,7 @@ const Field = ({
   </div>
 );
 
-const VendorInvitePage = () => {
+const AdminInvitePage = () => {
   const [form, setForm] = useState({
     businessName: "",
     contactName: "",
@@ -64,8 +67,10 @@ const VendorInvitePage = () => {
     country: "",
     businessCategory: "",
     serviceCategory: "",
-    whereMet: "Travel Conference / Networking",
+    connectionSource: "Travel Convention",
     notes: "",
+    quickNotes: "",
+    inviteStatus: "Draft",
   });
 
   const update = (key: string, value: string) => {
@@ -109,13 +114,28 @@ const VendorInvitePage = () => {
 
   const inviteLink = `${window.location.origin}/partner-invite/${inviteSlug}`;
 
-  const emailBody = `Hello ${form.contactName || "[Partner Contact]"},
+  const textMessage = `Hi ${
+    form.contactName || "[Partner Contact]"
+  }, this is Kim with Serene Passage International. Thank you for connecting with me regarding ${
+    form.businessName || "[Business Name]"
+  }.
 
-It was truly a pleasure connecting with you and learning more about ${form.businessName || "[Business Name]"}.
+Your Partner Preview invitation will be sent shortly.
+
+Invitation Link:
+${inviteLink}
+
+Please check your inbox or spam folder just in case.`;
+
+  const emailBody = `Hello ${
+    form.contactName || "[Partner Contact]"
+  },
+
+It was truly a pleasure connecting with you and learning more about ${
+    form.businessName || "[Business Name]"
+  }.
 
 Based on our conversation and the services you provide, I believe there may be a strong alignment between your business and the types of thoughtful, elevated, and curated destination experiences Serene Passage International is continuing to build for our travelers and groups.
-
-Serene Passage International is developing a private Partner Ecosystem designed to strengthen collaboration between trusted destination businesses, hospitality providers, local experience vendors, transportation services, dining experiences, wellness providers, wedding vendors, and other travel-related partners.
 
 Your invitation reference:
 ${inviteReference}
@@ -123,34 +143,22 @@ ${inviteReference}
 Partner invitation link:
 ${inviteLink}
 
-This invitation link will guide you through:
-• Partner onboarding
-• Account setup
-• Profile completion
-• Destination/service categorization
-• Future collaboration tools
-• Media/document uploads
-• Communication and review features
-
-As the ecosystem grows, the platform is expected to support future AI-assisted collaboration tools for destination packages, promotional campaigns, and curated experience planning.
-
 We look forward to learning more about your business and exploring meaningful ways we may be able to collaborate moving forward.
 
 Warm regards,
 
-[Your Name]
+Kim
 Founder & Travel Strategist
-Serene Passage International
-
-Escape. Explore. Experience.
-
-[Website]
-[Phone Number]
-[Business Email]`;
+Serene Passage International`;
 
   const copyEmail = async () => {
     await navigator.clipboard.writeText(emailBody);
     alert("Invitation email copied.");
+  };
+
+  const copyText = async () => {
+    await navigator.clipboard.writeText(textMessage);
+    alert("Text message copied.");
   };
 
   const copyLink = async () => {
@@ -158,14 +166,26 @@ Escape. Explore. Experience.
     alert("Invitation link copied.");
   };
 
-  const openEmail = () => {
-    const subject = encodeURIComponent(
-      "Serene Passage International | Partner Invitation"
+  const saveInvite = () => {
+    const existing =
+      JSON.parse(localStorage.getItem("spi-partner-invites") || "[]");
+
+    const updated = [
+      ...existing,
+      {
+        ...form,
+        inviteReference,
+        inviteLink,
+        createdAt: new Date().toISOString(),
+      },
+    ];
+
+    localStorage.setItem(
+      "spi-partner-invites",
+      JSON.stringify(updated)
     );
 
-    const body = encodeURIComponent(emailBody);
-
-    window.location.href = `mailto:${form.contactEmail}?subject=${subject}&body=${body}`;
+    alert("Partner invite saved.");
   };
 
   return (
@@ -185,24 +205,23 @@ Escape. Explore. Experience.
             <div className="mb-4 flex flex-wrap items-center gap-3">
               <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-black/30 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold backdrop-blur">
                 <Sparkles className="h-4 w-4" />
-                Owner Invitation Suite
+                Owner Back Office
               </div>
 
               <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-[10px] font-medium uppercase tracking-[0.16em] text-white/80 backdrop-blur">
                 <Languages className="h-4 w-4" />
-                International Partner Access
+                Partner Capture System
               </div>
             </div>
 
             <h1 className="font-display text-3xl md:text-5xl text-cream leading-tight">
-              Create a Partner Invitation
+              Partner Invite & Capture System
             </h1>
 
             <p className="text-sm md:text-base text-cream/75 mt-5 leading-relaxed max-w-2xl">
-              Capture partner details during networking conversations, travel
-              conferences, supplier meetings, resort visits, tourism events, or
-              destination relationship building and generate a personalized
-              onboarding invitation.
+              Capture relationship details, generate private onboarding links,
+              organize follow-up, and prepare destination partners for the
+              Serene Passage ecosystem.
             </p>
           </div>
         </div>
@@ -210,8 +229,8 @@ Escape. Explore. Experience.
 
       <SectionHeader
         eyebrow="Partner Intake"
-        title="Relationship & Invitation Details"
-        description="These details help Serene Passage organize invited partners by business category, location, destination relevance, and collaboration potential."
+        title="Partner Relationship Details"
+        description="Create and organize partner invitations, relationship notes, onboarding links, and future collaboration opportunities."
       />
 
       <div className="bg-card rounded-[2rem] border border-border/60 shadow-sm p-6 md:p-8 space-y-6">
@@ -220,13 +239,12 @@ Escape. Explore. Experience.
 
           <div>
             <h2 className="font-display text-2xl text-card-foreground">
-              Invited Partner Information
+              Partner Information
             </h2>
 
             <p className="text-sm text-foreground/65 mt-1 leading-6">
-              The generated invitation link will later connect this business to
-              onboarding, account setup, profile completion, and future partner
-              ecosystem tools.
+              These details help organize ecosystem relationships, onboarding,
+              and future collaboration opportunities.
             </p>
           </div>
         </div>
@@ -237,35 +255,22 @@ Escape. Explore. Experience.
               className={inputCls}
               value={form.businessName}
               onChange={(e) => update("businessName", e.target.value)}
-              placeholder="Company, resort, café, excursion, vendor, etc."
-              required
             />
           </Field>
 
-          <Field label="Public / Brand Name">
-            <input
-              className={inputCls}
-              placeholder="Optional public-facing brand name"
-            />
-          </Field>
-
-          <Field label="Contact Name" required>
+          <Field label="Contact Person" required>
             <input
               className={inputCls}
               value={form.contactName}
               onChange={(e) => update("contactName", e.target.value)}
-              placeholder="Full name"
-              required
             />
           </Field>
 
-          <Field label="Contact Email" required>
+          <Field label="Contact Email">
             <input
               className={inputCls}
               value={form.contactEmail}
               onChange={(e) => update("contactEmail", e.target.value)}
-              placeholder="contact@business.com"
-              required
             />
           </Field>
 
@@ -274,7 +279,6 @@ Escape. Explore. Experience.
               className={inputCls}
               value={form.phone}
               onChange={(e) => update("phone", e.target.value)}
-              placeholder="+1 (000) 000-0000"
             />
           </Field>
 
@@ -283,7 +287,6 @@ Escape. Explore. Experience.
               className={inputCls}
               value={form.country}
               onChange={(e) => update("country", e.target.value)}
-              placeholder="Country"
             />
           </Field>
 
@@ -292,20 +295,18 @@ Escape. Explore. Experience.
               className={inputCls}
               value={form.city}
               onChange={(e) => update("city", e.target.value)}
-              placeholder="City"
             />
           </Field>
 
-          <Field label="State / Province / Parish / Region">
+          <Field label="Region / Parish">
             <input
               className={inputCls}
               value={form.region}
               onChange={(e) => update("region", e.target.value)}
-              placeholder="Region"
             />
           </Field>
 
-          <Field label="Business Category">
+          <Field label="Business Category" required>
             <select
               className={selectCls}
               value={form.businessCategory}
@@ -315,13 +316,11 @@ Escape. Explore. Experience.
             >
               <option value="">Select category</option>
               <option>Hotel / Resort</option>
-              <option>Excursion / Tour</option>
               <option>Restaurant / Dining</option>
               <option>Transportation</option>
-              <option>Destination Wedding</option>
-              <option>Entertainment</option>
+              <option>Excursion / Tour</option>
               <option>Wellness / Spa</option>
-              <option>Local Vendor</option>
+              <option>Entertainment</option>
               <option>Tourism / Hospitality</option>
               <option>Other</option>
             </select>
@@ -334,135 +333,209 @@ Escape. Explore. Experience.
               onChange={(e) =>
                 update("serviceCategory", e.target.value)
               }
-              placeholder="VIP transfers, excursions, dining, etc."
             />
           </Field>
 
-          <Field label="Where You Connected">
-            <input
-              className={inputCls}
-              value={form.whereMet}
-              onChange={(e) => update("whereMet", e.target.value)}
-            />
+          <Field label="Connection Source">
+            <select
+              className={selectCls}
+              value={form.connectionSource}
+              onChange={(e) =>
+                update("connectionSource", e.target.value)
+              }
+            >
+              <option>Travel Convention</option>
+              <option>Hotel / Resort Visit</option>
+              <option>Restaurant / Café</option>
+              <option>Beach / Local Outing</option>
+              <option>Excursion / Tour</option>
+              <option>Referral</option>
+              <option>Personal Connection</option>
+              <option>Online Research</option>
+              <option>Other</option>
+            </select>
           </Field>
 
-          <Field label="Conversation / Relationship Notes">
-            <input
-              className={inputCls}
-              value={form.notes}
-              onChange={(e) => update("notes", e.target.value)}
-              placeholder="Helpful reminders about the relationship"
-            />
+          <Field label="Invite Status">
+            <select
+              className={selectCls}
+              value={form.inviteStatus}
+              onChange={(e) =>
+                update("inviteStatus", e.target.value)
+              }
+            >
+              <option>Draft</option>
+              <option>Ready To Send</option>
+              <option>Email Sent</option>
+              <option>Text Sent</option>
+              <option>Reminder Sent</option>
+              <option>Account Created</option>
+              <option>Needs Follow-Up</option>
+            </select>
           </Field>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <div className="bg-card rounded-[2rem] border border-border/60 shadow-sm p-6 md:p-8 space-y-6">
           <div className="flex items-start gap-3">
-            <ShieldCheck
-              className="text-primary shrink-0 mt-1"
-              size={22}
-            />
+            <FileUp className="text-primary shrink-0 mt-1" size={22} />
 
             <div>
               <h2 className="font-display text-2xl text-card-foreground">
-                Generated Invite Reference
+                Upload Contact File
               </h2>
 
               <p className="text-sm text-foreground/65 mt-1 leading-6">
-                This reference can later help identify invite origin,
-                location, category, and relationship type inside the partner
-                ecosystem.
+                Upload a contact export, PDF, screenshot, or saved business
+                contact file for future organization and review.
               </p>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-gold/20 bg-gradient-to-br from-[#f8f3ec] via-[#f5f0ea] to-[#f3edf1] p-5">
-            <p className="text-[10px] uppercase tracking-[0.22em] text-gold mb-2">
-              Invitation Reference
-            </p>
+          <input type="file" className={inputCls} />
 
-            <p className="font-mono text-lg text-card-foreground break-all">
-              {inviteReference}
-            </p>
-          </div>
+          <Field
+            label="Quick Voice / Text Notes"
+            description="Use labeled formatting such as: Business Name:, Industry:, Category:, Contact Person:, Email:, Phone:"
+          >
+            <textarea
+              rows={10}
+              className={textAreaCls}
+              value={form.quickNotes}
+              onChange={(e) =>
+                update("quickNotes", e.target.value)
+              }
+            />
+          </Field>
 
-          <Field label="Generated Invitation Link">
-            <div className="flex gap-2">
-              <input
-                className={inputCls}
-                value={inviteLink}
-                readOnly
+          <Field label="Relationship Notes">
+            <textarea
+              rows={6}
+              className={textAreaCls}
+              value={form.notes}
+              onChange={(e) => update("notes", e.target.value)}
+            />
+          </Field>
+        </div>
+
+        <div className="space-y-6">
+          <div className="bg-card rounded-[2rem] border border-border/60 shadow-sm p-6 md:p-8 space-y-6">
+            <div className="flex items-start gap-3">
+              <ShieldCheck
+                className="text-primary shrink-0 mt-1"
+                size={22}
               />
+
+              <div>
+                <h2 className="font-display text-2xl text-card-foreground">
+                  Generated Invite
+                </h2>
+
+                <p className="text-sm text-foreground/65 mt-1 leading-6">
+                  Generate and organize onboarding links for future ecosystem
+                  partners.
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-gold/20 bg-gradient-to-br from-[#f8f3ec] via-[#f5f0ea] to-[#f3edf1] p-5">
+              <p className="text-[10px] uppercase tracking-[0.22em] text-gold mb-2">
+                Invitation Reference
+              </p>
+
+              <p className="font-mono text-lg text-card-foreground break-all">
+                {inviteReference}
+              </p>
+            </div>
+
+            <Field label="Generated Invitation Link">
+              <div className="flex gap-2">
+                <input
+                  className={inputCls}
+                  value={inviteLink}
+                  readOnly
+                />
+
+                <button
+                  onClick={copyLink}
+                  className="h-11 w-11 shrink-0 rounded-xl border border-border bg-card hover:bg-muted transition-colors inline-flex items-center justify-center"
+                >
+                  <Copy size={16} />
+                </button>
+              </div>
+            </Field>
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={saveInvite}
+                className="h-11 px-5 rounded-xl bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-2"
+              >
+                <Save size={16} />
+                Save Invite
+              </button>
 
               <button
                 onClick={copyLink}
-                className="h-11 w-11 shrink-0 rounded-xl border border-border bg-card hover:bg-muted transition-colors inline-flex items-center justify-center"
+                className="h-11 px-5 rounded-xl border border-border bg-card text-sm font-medium inline-flex items-center gap-2"
               >
                 <Copy size={16} />
+                Copy Link
               </button>
             </div>
-          </Field>
+          </div>
 
-          <div className="rounded-2xl bg-muted/40 p-5">
+          <div className="bg-card rounded-[2rem] border border-border/60 shadow-sm p-6 md:p-8 space-y-5">
             <div className="flex items-start gap-3">
-              <CheckCircle2
-                className="text-gold shrink-0 mt-1"
-                size={18}
+              <Mail className="text-gold shrink-0 mt-1" size={22} />
+
+              <div>
+                <h2 className="font-display text-2xl text-card-foreground">
+                  Generated Follow-Up
+                </h2>
+
+                <p className="text-sm text-foreground/65 mt-1 leading-6">
+                  Copy and send relationship follow-up messaging directly from
+                  the owner console.
+                </p>
+              </div>
+            </div>
+
+            <Field label="Invitation Email">
+              <textarea
+                rows={12}
+                className={textAreaCls}
+                value={emailBody}
+                readOnly
               />
+            </Field>
 
-              <p className="text-sm leading-7 text-foreground/70">
-                Future backend connection: this invitation should later save
-                the business/contact information, generate a true invite
-                record, track activation status, and connect onboarding/account
-                setup to the invite email.
-              </p>
+            <Field label="Text Message Follow-Up">
+              <textarea
+                rows={8}
+                className={textAreaCls}
+                value={textMessage}
+                readOnly
+              />
+            </Field>
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={copyEmail}
+                className="h-11 px-5 rounded-xl border border-border bg-card text-sm font-medium inline-flex items-center gap-2"
+              >
+                <Mail size={16} />
+                Copy Email
+              </button>
+
+              <button
+                onClick={copyText}
+                className="h-11 px-5 rounded-xl border border-border bg-card text-sm font-medium inline-flex items-center gap-2"
+              >
+                <MessageSquareText size={16} />
+                Copy Text
+              </button>
             </div>
-          </div>
-        </div>
-
-        <div className="bg-card rounded-[2rem] border border-border/60 shadow-sm p-6 md:p-8 space-y-5">
-          <div className="flex items-start gap-3">
-            <Mail className="text-gold shrink-0 mt-1" size={22} />
-
-            <div>
-              <h2 className="font-display text-2xl text-card-foreground">
-                Generated Invitation Email
-              </h2>
-
-              <p className="text-sm text-foreground/65 mt-1 leading-6">
-                Copy this invitation or open it directly in the owner’s email
-                client for manual sending.
-              </p>
-            </div>
-          </div>
-
-          <Field label="Generated Email">
-            <textarea
-              rows={22}
-              className={textAreaCls}
-              value={emailBody}
-              readOnly
-            />
-          </Field>
-
-          <div className="flex flex-col sm:flex-row gap-3 justify-end">
-            <button
-              onClick={copyEmail}
-              className="h-11 px-6 rounded-xl border border-border bg-card text-sm font-medium hover:bg-muted transition-colors inline-flex items-center justify-center gap-2"
-            >
-              <Copy size={16} />
-              Copy Invitation Email
-            </button>
-
-            <button
-              onClick={openEmail}
-              className="h-11 px-6 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-all inline-flex items-center justify-center gap-2"
-            >
-              <Mail size={16} />
-              Open Email Draft
-            </button>
           </div>
         </div>
       </div>
@@ -473,12 +546,12 @@ Escape. Explore. Experience.
             <Building2 className="mb-4 text-primary" size={22} />
 
             <h3 className="font-display text-lg text-card-foreground">
-              Invitation Recognition
+              Relationship Capture
             </h3>
 
             <p className="mt-2 text-sm leading-7 text-foreground/65">
-              The partner link should later recognize the connected business,
-              email, invite status, onboarding progress, and account setup.
+              Organize relationship details and prepare ecosystem onboarding
+              invitations from one operational dashboard.
             </p>
           </div>
 
@@ -490,9 +563,8 @@ Escape. Explore. Experience.
             </h3>
 
             <p className="mt-2 text-sm leading-7 text-foreground/65">
-              Partners are intended to be categorized by business type,
-              location, service area, and travel relevance throughout the
-              ecosystem.
+              Categorize partners by business type, destination, service area,
+              and ecosystem relevance.
             </p>
           </div>
 
@@ -500,13 +572,13 @@ Escape. Explore. Experience.
             <Globe2 className="mb-4 text-primary" size={22} />
 
             <h3 className="font-display text-lg text-card-foreground">
-              International Expansion
+              Future AI Ecosystem
             </h3>
 
             <p className="mt-2 text-sm leading-7 text-foreground/65">
-              The partner ecosystem is being designed for international
-              hospitality, tourism, travel, wellness, dining, and local
-              experience collaboration.
+              This system is being prepared for future AI-assisted destination
+              collaboration, campaign creation, and ecosystem intelligence
+              tools.
             </p>
           </div>
         </div>
@@ -515,4 +587,4 @@ Escape. Explore. Experience.
   );
 };
 
-export default VendorInvitePage;
+export default AdminInvitePage;

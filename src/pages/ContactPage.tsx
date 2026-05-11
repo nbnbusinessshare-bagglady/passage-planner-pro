@@ -51,10 +51,10 @@ const ContactPage = () => {
           className="w-full h-[320px] md:h-[400px] object-cover"
         />
 
-        <div className="absolute inset-0 z-20 flex items-center">
+        <div className="absolute inset-0 z-20 flex items-center justify-center text-center">
           <div className="container">
             <ScrollReveal>
-              <div className="max-w-2xl">
+              <div className="max-w-2xl mx-auto text-center">
                 <p className="text-[11px] tracking-[0.28em] uppercase text-white/75 mb-4">
                   Start the Conversation
                 </p>

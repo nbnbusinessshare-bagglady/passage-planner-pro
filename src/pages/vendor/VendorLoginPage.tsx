@@ -1,15 +1,16 @@
 // FILE: src/pages/vendor/VendorLoginPage.tsx
 
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import {
   ShieldCheck,
   Building2,
   Globe2,
   HandHeart,
-} from 'lucide-react';
+  KeyRound,
+} from "lucide-react";
 
-import logo from '@/assets/logo.png';
-import loginHero from '@/assets/partner-portal/partner-portal-hero-luxury-lobby.png';
+import logo from "@/assets/logo.png";
+import loginHero from "@/assets/partner-portal/partner-portal-hero-luxury-lobby.png";
 
 const VendorLoginPage = () => {
   return (
@@ -122,8 +123,14 @@ const VendorLoginPage = () => {
                   </p>
 
                   <h2 className="font-display text-2xl text-cream">
-                    Partner Login
+                    Partner Access & Account Setup
                   </h2>
+
+                  <p className="mt-2 text-sm leading-6 text-cream/60">
+                    Invited partners may log in, continue account setup, or
+                    prepare onboarding access using the email connected to their
+                    invitation.
+                  </p>
                 </div>
               </div>
 
@@ -159,7 +166,7 @@ const VendorLoginPage = () => {
                   to="/vendor"
                   className="mt-2 w-full h-12 inline-flex items-center justify-center rounded-md bg-gold text-[hsl(0,0%,8%)] text-xs tracking-[0.22em] uppercase font-semibold hover:bg-gold/90 active:scale-[0.99] transition-all"
                 >
-                  Enter Partner Suite
+                  Continue to Partner Access
                 </Link>
 
                 <button
@@ -170,6 +177,26 @@ const VendorLoginPage = () => {
                 </button>
               </form>
 
+              <div className="mt-6 rounded-2xl border border-gold/20 bg-gold/5 p-5">
+                <div className="flex items-start gap-3">
+                  <KeyRound className="mt-1 h-5 w-5 shrink-0 text-gold" />
+
+                  <div>
+                    <p className="text-[10px] tracking-[0.22em] uppercase text-gold mb-2">
+                      Invitation Setup Notice
+                    </p>
+
+                    <p className="text-sm leading-7 text-cream/70">
+                      If you recently received a Serene Passage invitation link,
+                      your onboarding setup will be connected to the email
+                      associated with your partner invitation. Future account
+                      verification, uploads, and collaboration access will be
+                      tied to that relationship profile.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className="mt-8 pt-7 border-t border-cream/10">
                 <div className="text-center">
                   <p className="text-xs text-cream/55 leading-relaxed mb-4">
@@ -177,16 +204,19 @@ const VendorLoginPage = () => {
                     International travel partner?
                   </p>
 
-                  <button className="inline-flex items-center justify-center h-11 px-6 rounded-md border border-gold/35 text-gold text-xs tracking-[0.22em] uppercase font-medium hover:bg-gold/10 transition-all">
-                    Apply to Become a Partner
-                  </button>
+                  <Link
+                    to="/partner-interest"
+                    className="inline-flex items-center justify-center h-11 px-6 rounded-md border border-gold/35 text-gold text-xs tracking-[0.22em] uppercase font-medium hover:bg-gold/10 transition-all"
+                  >
+                    Request Partner Consideration
+                  </Link>
                 </div>
               </div>
             </div>
 
             <p className="text-center text-[11px] text-cream/45 mt-6 tracking-wide leading-relaxed">
-              Exclusive travel opportunities curated through meaningful
-              global hospitality and destination relationships
+              Exclusive travel opportunities curated through meaningful global
+              hospitality and destination relationships.
             </p>
           </div>
         </div>
