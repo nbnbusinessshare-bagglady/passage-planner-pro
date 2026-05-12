@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import { SectionHeader } from "@/components/vendor/VendorLayout";
+import { supabase } from "@/lib/supabase";
 
 const Field = ({
   label,
@@ -97,7 +98,9 @@ const collaborationInterests = [
 ];
 
 const VendorSubmitPage = () => {
+  const [saving, setSaving] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+
   const [form, setForm] = useState({
     legalBusinessName: "",
     publicBusinessName: "",
@@ -125,7 +128,6 @@ const VendorSubmitPage = () => {
     backupContactName: "",
     backupContactEmail: "",
     ownerNotes: "",
-    submissionStatus: "Draft",
   });
 
   const update = (key: string, value: string) => {
@@ -140,28 +142,134 @@ const VendorSubmitPage = () => {
     );
   };
 
-  const saveProfile = (status: "Draft" | "Submitted") => {
-    const existing = JSON.parse(
-      localStorage.getItem("spi-partner-profiles") || "[]"
-    );
+  const resetForm = () => {
+    setForm({
+      legalBusinessName: "",
+      publicBusinessName: "",
+      mainPhone: "",
+      mainEmail: "",
+      website: "",
+      department: "",
+      businessType: "",
+      serviceCategory: "",
+      country: "",
+      cityRegion: "",
+      nearbyProperties: "",
+      serviceArea: "",
+      transportationAccess: "",
+      groupCapacity: "",
+      businessOverview: "",
+      specialRates: "",
+      travelerExperience: "",
+      collaborationStyle: "",
+      seasonalNotes: "",
+      primaryContactName: "",
+      primaryContactTitle: "",
+      primaryContactEmail: "",
+      primaryContactPhone: "",
+      backupContactName: "",
+      backupContactEmail: "",
+      ownerNotes: "",
+    });
 
-    const updatedProfile = {
-      ...form,
-      collaborationInterests: selectedInterests,
-      submissionStatus: status,
-      savedAt: new Date().toISOString(),
-    };
+    setSelectedInterests([]);
+  };
 
-    localStorage.setItem(
-      "spi-partner-profiles",
-      JSON.stringify([...existing, updatedProfile])
-    );
+  const saveProfile = async (status: "Draft" | "Submitted") => {
+    try {
+      setSaving(true);
 
-    alert(
-      status === "Submitted"
-        ? "Partner profile submitted for Serene Passage review."
-        : "Partner profile draft saved."
-    );
+      const payload = {
+        legal_business_name: form.legalBusinessName,
+        public_business_name: form.publicBusinessName,
+        business_type: form.businessType,
+        service_category: form.serviceCategory,
+        country: form.country,
+        city_region: form.cityRegion,
+        group_capacity: form.groupCapacity,
+        business_overview: `Business Overview:
+${form.businessOverview}
+
+Special Rates / Promotions:
+${form.specialRates}
+
+Traveler Experience:
+${form.travelerExperience}
+
+Preferred Collaboration Style:
+${form.collaborationStyle}
+
+Availability / Seasonal Notes:
+${form.seasonalNotes}
+
+Nearby Hotels / Resorts:
+${form.nearbyProperties}
+
+Primary Service Area:
+${form.serviceArea}
+
+Transportation Access:
+${form.transportationAccess}
+
+Primary Department:
+${form.department}
+
+Website:
+${form.website}
+
+Media / Document Notes:
+${form.ownerNotes}
+
+Backup Contact:
+${form.backupContactName}
+${form.backupContactEmail}`,
+        primary_contact_name: form.primaryContactName,
+        primary_contact_title: form.primaryContactTitle,
+        primary_contact_email: form.primaryContactEmail || form.mainEmail,
+        primary_contact_phone: form.primaryContactPhone || form.mainPhone,
+        collaboration_interests: selectedInterests,
+        submission_status: status,
+      };
+
+      const { error } = await supabase.from("partner_profiles").insert([payload]);
+
+      if (error) {
+        console.error(error);
+        alert("Supabase profile save failed. Check console for details.");
+        return;
+      }
+
+      const existing = JSON.parse(
+        localStorage.getItem("spi-partner-profiles") || "[]"
+      );
+
+      const updatedProfile = {
+        ...form,
+        collaborationInterests: selectedInterests,
+        submissionStatus: status,
+        savedAt: new Date().toISOString(),
+      };
+
+      localStorage.setItem(
+        "spi-partner-profiles",
+        JSON.stringify([...existing, updatedProfile])
+      );
+
+      alert(
+        status === "Submitted"
+          ? "Partner profile submitted for Serene Passage review."
+          : "Partner profile draft saved."
+      );
+
+      if (status === "Submitted") {
+        resetForm();
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Unexpected error saving profile.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -212,9 +320,11 @@ const VendorSubmitPage = () => {
       <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
           <CheckCircle2 className="mb-3 text-primary" size={22} />
+
           <h3 className="font-display text-lg text-card-foreground">
             Step 1: Business Details
           </h3>
+
           <p className="mt-2 text-sm leading-6 text-foreground/65">
             Share who you are, where you operate, and how travelers experience
             your services.
@@ -223,9 +333,11 @@ const VendorSubmitPage = () => {
 
         <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
           <Upload className="mb-3 text-primary" size={22} />
+
           <h3 className="font-display text-lg text-card-foreground">
             Step 2: Assets & Notes
           </h3>
+
           <p className="mt-2 text-sm leading-6 text-foreground/65">
             Uploads are coming next. For now, describe key brochures, photos,
             rates, and documents that should be shared.
@@ -234,9 +346,11 @@ const VendorSubmitPage = () => {
 
         <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
           <ClipboardCheck className="mb-3 text-primary" size={22} />
+
           <h3 className="font-display text-lg text-card-foreground">
             Step 3: Owner Review
           </h3>
+
           <p className="mt-2 text-sm leading-6 text-foreground/65">
             Serene Passage reviews partner fit, service quality, destination
             relevance, and collaboration potential.
@@ -400,9 +514,7 @@ const VendorSubmitPage = () => {
               <input
                 className={inputCls}
                 value={form.transportationAccess}
-                onChange={(e) =>
-                  update("transportationAccess", e.target.value)
-                }
+                onChange={(e) => update("transportationAccess", e.target.value)}
                 placeholder="Airport transfers, shuttle zones, pickup areas"
               />
             </Field>
@@ -664,20 +776,22 @@ const VendorSubmitPage = () => {
             <div className="flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
+                disabled={saving}
                 onClick={() => saveProfile("Draft")}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-6 text-sm font-medium transition-colors hover:bg-muted"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-6 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-50"
               >
                 <Save size={16} />
-                Save Draft
+                {saving ? "Saving..." : "Save Draft"}
               </button>
 
               <button
                 type="button"
+                disabled={saving}
                 onClick={() => saveProfile("Submitted")}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 active:scale-[0.98]"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
               >
                 <ClipboardCheck size={16} />
-                Submit Partner Profile
+                {saving ? "Submitting..." : "Submit Partner Profile"}
               </button>
             </div>
           </div>

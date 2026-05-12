@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import {
   Building2,
-  CheckCircle2,
   Copy,
   FileUp,
   Globe2,
@@ -18,7 +17,7 @@ import {
 } from "lucide-react";
 
 import { SectionHeader } from "@/components/vendor/VendorLayout";
-
+import { supabase } from "@/lib/supabase";
 import inviteHero from "@/assets/partner-portal/invite-partner-networking.png";
 
 const inputCls =
@@ -57,6 +56,8 @@ const Field = ({
 );
 
 const AdminInvitePage = () => {
+  const [saving, setSaving] = useState(false);
+
   const [form, setForm] = useState({
     businessName: "",
     contactName: "",
@@ -127,9 +128,7 @@ ${inviteLink}
 
 Please check your inbox or spam folder just in case.`;
 
-  const emailBody = `Hello ${
-    form.contactName || "[Partner Contact]"
-  },
+  const emailBody = `Hello ${form.contactName || "[Partner Contact]"},
 
 It was truly a pleasure connecting with you and learning more about ${
     form.businessName || "[Business Name]"
@@ -166,26 +165,86 @@ Serene Passage International`;
     alert("Invitation link copied.");
   };
 
-  const saveInvite = () => {
-    const existing =
-      JSON.parse(localStorage.getItem("spi-partner-invites") || "[]");
+  const saveInvite = async () => {
+    if (!form.businessName || !form.contactName || !form.businessCategory) {
+      alert("Please complete Business Name, Contact Person, and Business Category.");
+      return;
+    }
 
-    const updated = [
-      ...existing,
-      {
-        ...form,
-        inviteReference,
-        inviteLink,
-        createdAt: new Date().toISOString(),
-      },
-    ];
+    try {
+      setSaving(true);
 
-    localStorage.setItem(
-      "spi-partner-invites",
-      JSON.stringify(updated)
-    );
+      const invitePayload = {
+        business_name: form.businessName,
+        contact_name: form.contactName,
+        contact_email: form.contactEmail,
+        contact_phone: form.phone,
+        industry: form.businessCategory,
+        address: [form.city, form.region, form.country]
+          .filter(Boolean)
+          .join(", "),
+        invite_slug: inviteSlug,
+        invite_status: form.inviteStatus,
+        met_source: form.connectionSource,
+        notes: `Service Category: ${form.serviceCategory}
 
-    alert("Partner invite saved.");
+Quick Notes:
+${form.quickNotes}
+
+Relationship Notes:
+${form.notes}`,
+      };
+
+      const { error } = await supabase
+        .from("partner_invites")
+        .insert([invitePayload]);
+
+      if (error) {
+        console.error(error);
+        alert("Supabase save failed. Check console for details.");
+        return;
+      }
+
+      const existing = JSON.parse(
+        localStorage.getItem("spi-partner-invites") || "[]"
+      );
+
+      const updated = [
+        ...existing,
+        {
+          ...form,
+          inviteReference,
+          inviteLink,
+          inviteSlug,
+          createdAt: new Date().toISOString(),
+        },
+      ];
+
+      localStorage.setItem("spi-partner-invites", JSON.stringify(updated));
+
+      alert("Partner invite saved successfully.");
+
+      setForm({
+        businessName: "",
+        contactName: "",
+        contactEmail: "",
+        phone: "",
+        city: "",
+        region: "",
+        country: "",
+        businessCategory: "",
+        serviceCategory: "",
+        connectionSource: "Travel Convention",
+        notes: "",
+        quickNotes: "",
+        inviteStatus: "Draft",
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Unexpected error saving invite.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -310,9 +369,7 @@ Serene Passage International`;
             <select
               className={selectCls}
               value={form.businessCategory}
-              onChange={(e) =>
-                update("businessCategory", e.target.value)
-              }
+              onChange={(e) => update("businessCategory", e.target.value)}
             >
               <option value="">Select category</option>
               <option>Hotel / Resort</option>
@@ -330,9 +387,7 @@ Serene Passage International`;
             <input
               className={inputCls}
               value={form.serviceCategory}
-              onChange={(e) =>
-                update("serviceCategory", e.target.value)
-              }
+              onChange={(e) => update("serviceCategory", e.target.value)}
             />
           </Field>
 
@@ -340,9 +395,7 @@ Serene Passage International`;
             <select
               className={selectCls}
               value={form.connectionSource}
-              onChange={(e) =>
-                update("connectionSource", e.target.value)
-              }
+              onChange={(e) => update("connectionSource", e.target.value)}
             >
               <option>Travel Convention</option>
               <option>Hotel / Resort Visit</option>
@@ -360,9 +413,7 @@ Serene Passage International`;
             <select
               className={selectCls}
               value={form.inviteStatus}
-              onChange={(e) =>
-                update("inviteStatus", e.target.value)
-              }
+              onChange={(e) => update("inviteStatus", e.target.value)}
             >
               <option>Draft</option>
               <option>Ready To Send</option>
@@ -403,9 +454,7 @@ Serene Passage International`;
               rows={10}
               className={textAreaCls}
               value={form.quickNotes}
-              onChange={(e) =>
-                update("quickNotes", e.target.value)
-              }
+              onChange={(e) => update("quickNotes", e.target.value)}
             />
           </Field>
 
@@ -451,13 +500,10 @@ Serene Passage International`;
 
             <Field label="Generated Invitation Link">
               <div className="flex gap-2">
-                <input
-                  className={inputCls}
-                  value={inviteLink}
-                  readOnly
-                />
+                <input className={inputCls} value={inviteLink} readOnly />
 
                 <button
+                  type="button"
                   onClick={copyLink}
                   className="h-11 w-11 shrink-0 rounded-xl border border-border bg-card hover:bg-muted transition-colors inline-flex items-center justify-center"
                 >
@@ -468,14 +514,17 @@ Serene Passage International`;
 
             <div className="flex flex-wrap gap-3">
               <button
+                type="button"
                 onClick={saveInvite}
-                className="h-11 px-5 rounded-xl bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-2"
+                disabled={saving}
+                className="h-11 px-5 rounded-xl bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-2 disabled:opacity-50"
               >
                 <Save size={16} />
-                Save Invite
+                {saving ? "Saving..." : "Save Invite"}
               </button>
 
               <button
+                type="button"
                 onClick={copyLink}
                 className="h-11 px-5 rounded-xl border border-border bg-card text-sm font-medium inline-flex items-center gap-2"
               >
@@ -521,6 +570,7 @@ Serene Passage International`;
 
             <div className="flex flex-wrap gap-3">
               <button
+                type="button"
                 onClick={copyEmail}
                 className="h-11 px-5 rounded-xl border border-border bg-card text-sm font-medium inline-flex items-center gap-2"
               >
@@ -529,6 +579,7 @@ Serene Passage International`;
               </button>
 
               <button
+                type="button"
                 onClick={copyText}
                 className="h-11 px-5 rounded-xl border border-border bg-card text-sm font-medium inline-flex items-center gap-2"
               >

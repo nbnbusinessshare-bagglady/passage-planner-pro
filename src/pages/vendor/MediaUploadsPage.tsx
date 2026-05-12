@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { SectionHeader, StatusBadge } from "@/components/vendor/VendorLayout";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 
 import {
   AlertCircle,
@@ -83,6 +84,7 @@ const messages = [
 ];
 
 type UploadRecord = {
+  id?: string;
   assetName: string;
   category: string;
   assetType: string;
@@ -99,6 +101,7 @@ const textAreaCls =
   "w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
 
 const MediaUploadsPage = () => {
+  const [saving, setSaving] = useState(false);
   const [uploads, setUploads] = useState<UploadRecord[]>([]);
 
   const [form, setForm] = useState({
@@ -110,46 +113,106 @@ const MediaUploadsPage = () => {
   });
 
   useEffect(() => {
-    const saved = JSON.parse(
-      localStorage.getItem("spi-partner-assets") || "[]"
-    );
+    const loadAssets = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("partner_assets")
+          .select("*")
+          .order("created_at", { ascending: false });
 
-    setUploads(saved.reverse());
+        if (error) {
+          console.error(error);
+
+          const saved = JSON.parse(
+            localStorage.getItem("spi-partner-assets") || "[]"
+          );
+
+          setUploads(saved.reverse());
+          return;
+        }
+
+        const formatted: UploadRecord[] =
+          data?.map((item: any) => ({
+            id: item.id,
+            assetName: item.asset_name || "",
+            category: item.category || "",
+            assetType: item.asset_type || "",
+            externalLink: item.external_link || "",
+            notes: item.notes || "",
+            status: item.status || "Submitted",
+            createdAt: item.created_at,
+          })) || [];
+
+        setUploads(formatted);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadAssets();
   }, []);
 
   const update = (key: string, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const saveAsset = () => {
-    const existing = JSON.parse(
-      localStorage.getItem("spi-partner-assets") || "[]"
-    );
+  const saveAsset = async () => {
+    if (!form.assetName || !form.category) {
+      alert("Please complete Asset Name and Category.");
+      return;
+    }
 
-    const newAsset = {
-      ...form,
-      status: "Submitted",
-      createdAt: new Date().toISOString(),
-    };
+    try {
+      setSaving(true);
 
-    const updated = [...existing, newAsset];
+      const payload = {
+        asset_name: form.assetName,
+        category: form.category,
+        asset_type: form.assetType,
+        external_link: form.externalLink,
+        notes: form.notes,
+        status: "Submitted",
+      };
 
-    localStorage.setItem(
-      "spi-partner-assets",
-      JSON.stringify(updated)
-    );
+      const { error } = await supabase.from("partner_assets").insert([payload]);
 
-    setUploads(updated.reverse());
+      if (error) {
+        console.error(error);
+        alert("Supabase asset save failed. Check console for details.");
+        return;
+      }
 
-    setForm({
-      assetName: "",
-      category: "",
-      assetType: "",
-      externalLink: "",
-      notes: "",
-    });
+      const existing = JSON.parse(
+        localStorage.getItem("spi-partner-assets") || "[]"
+      );
 
-    alert("Asset information saved for review.");
+      const newAsset = {
+        ...form,
+        status: "Submitted",
+        createdAt: new Date().toISOString(),
+      };
+
+      const updated = [...existing, newAsset];
+
+      localStorage.setItem("spi-partner-assets", JSON.stringify(updated));
+
+      setUploads([...updated].reverse());
+
+      setForm({
+        assetName: "",
+        category: "",
+        assetType: "",
+        externalLink: "",
+        notes: "",
+      });
+
+      alert("Asset information saved for review.");
+    } catch (err) {
+      console.error(err);
+      alert("Unexpected error saving asset.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -241,9 +304,7 @@ const MediaUploadsPage = () => {
                 <input
                   className={inputCls}
                   value={form.assetName}
-                  onChange={(e) =>
-                    update("assetName", e.target.value)
-                  }
+                  onChange={(e) => update("assetName", e.target.value)}
                   placeholder="Wedding brochure, retreat photos, etc."
                 />
               </div>
@@ -256,12 +317,9 @@ const MediaUploadsPage = () => {
                 <select
                   className={inputCls}
                   value={form.category}
-                  onChange={(e) =>
-                    update("category", e.target.value)
-                  }
+                  onChange={(e) => update("category", e.target.value)}
                 >
                   <option value="">Select Category</option>
-
                   {categories.map((category) => (
                     <option key={category}>{category}</option>
                   ))}
@@ -276,9 +334,7 @@ const MediaUploadsPage = () => {
                 <input
                   className={inputCls}
                   value={form.assetType}
-                  onChange={(e) =>
-                    update("assetType", e.target.value)
-                  }
+                  onChange={(e) => update("assetType", e.target.value)}
                   placeholder="PDF, JPG, MP4, Menu, Flyer, etc."
                 />
               </div>
@@ -291,9 +347,7 @@ const MediaUploadsPage = () => {
                 <input
                   className={inputCls}
                   value={form.externalLink}
-                  onChange={(e) =>
-                    update("externalLink", e.target.value)
-                  }
+                  onChange={(e) => update("externalLink", e.target.value)}
                   placeholder="Google Drive, Dropbox, WeTransfer, etc."
                 />
               </div>
@@ -315,19 +369,17 @@ const MediaUploadsPage = () => {
 
             <button
               type="button"
+              disabled={saving}
               onClick={saveAsset}
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 disabled:opacity-50"
             >
               <Save size={16} />
-              Save Asset Record
+              {saving ? "Saving..." : "Save Asset Record"}
             </button>
 
             <div className="rounded-2xl bg-muted/30 p-5">
               <div className="flex items-start gap-3">
-                <ShieldCheck
-                  size={18}
-                  className="mt-1 shrink-0 text-primary"
-                />
+                <ShieldCheck size={18} className="mt-1 shrink-0 text-primary" />
 
                 <p className="text-sm leading-7 text-foreground/70">
                   Future backend logic: uploads should connect to the partner
@@ -341,10 +393,7 @@ const MediaUploadsPage = () => {
 
         <div className="rounded-[2rem] border border-border/60 bg-card p-6 shadow-sm md:p-8">
           <div className="flex items-start gap-3">
-            <MessageSquareText
-              className="mt-1 shrink-0 text-primary"
-              size={22}
-            />
+            <MessageSquareText className="mt-1 shrink-0 text-primary" size={22} />
 
             <div>
               <h2 className="font-display text-2xl text-card-foreground">
@@ -429,8 +478,8 @@ const MediaUploadsPage = () => {
       <section>
         <SectionHeader
           eyebrow="Saved Asset Records"
-          title="Temporary Upload Tracking"
-          description="Until cloud uploads are connected, asset records and links are temporarily stored in local browser storage."
+          title="Asset Review Tracking"
+          description="Asset records are now connected to Supabase and will later connect to cloud file uploads and review workflows."
         />
 
         {uploads.length === 0 ? (
@@ -452,10 +501,10 @@ const MediaUploadsPage = () => {
                 key={`${asset.assetName}-${index}`}
                 className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm"
               >
-                <div className="aspect-[4/2] bg-gradient-to-br from-lavender/30 via-background to-sage/20 flex items-center justify-center">
-                  {asset.assetType.includes("MP4") ? (
+                <div className="flex aspect-[4/2] items-center justify-center bg-gradient-to-br from-lavender/30 via-background to-sage/20">
+                  {asset.assetType?.toUpperCase().includes("MP4") ? (
                     <FileVideo className="text-foreground/40" size={42} />
-                  ) : asset.assetType.includes("PDF") ? (
+                  ) : asset.assetType?.toUpperCase().includes("PDF") ? (
                     <FileText className="text-foreground/40" size={42} />
                   ) : (
                     <FileImage className="text-foreground/40" size={42} />
@@ -503,11 +552,13 @@ const MediaUploadsPage = () => {
 
                   <div className="mt-5 flex items-center justify-between">
                     <p className="text-xs text-foreground/50">
-                      {asset.assetType}
+                      {asset.assetType || "Asset"}
                     </p>
 
                     <p className="text-xs text-foreground/50">
-                      {new Date(asset.createdAt).toLocaleString()}
+                      {asset.createdAt
+                        ? new Date(asset.createdAt).toLocaleString()
+                        : "—"}
                     </p>
                   </div>
                 </div>
@@ -519,10 +570,7 @@ const MediaUploadsPage = () => {
 
       <div className="rounded-[2rem] border border-lavender/40 bg-lavender/10 p-6">
         <div className="flex items-start gap-3">
-          <Link2
-            size={18}
-            className="mt-1 shrink-0 text-primary"
-          />
+          <Link2 size={18} className="mt-1 shrink-0 text-primary" />
 
           <div>
             <p className="font-medium text-card-foreground">

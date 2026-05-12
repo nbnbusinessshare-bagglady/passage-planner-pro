@@ -1,6 +1,7 @@
 // FILE: src/pages/admin/AdminInviteQueuePage.tsx
 
 import { useEffect, useState } from "react";
+
 import {
   ClipboardList,
   Copy,
@@ -12,33 +13,95 @@ import {
 
 import { SectionHeader } from "@/components/vendor/VendorLayout";
 
+import { supabase } from "@/lib/supabase";
+
 type InviteRecord = {
+  id?: string;
+
   businessName: string;
   contactName: string;
   contactEmail: string;
   phone: string;
+
   country: string;
+
   businessCategory: string;
   connectionSource: string;
+
   inviteStatus: string;
-  inviteReference: string;
+
+  inviteReference?: string;
+
   inviteLink: string;
+
   createdAt: string;
 };
 
 const AdminInviteQueuePage = () => {
+  const [loading, setLoading] = useState(true);
+
   const [invites, setInvites] = useState<InviteRecord[]>([]);
 
   useEffect(() => {
-    const saved = JSON.parse(
-      localStorage.getItem("spi-partner-invites") || "[]"
-    );
+    const loadInvites = async () => {
+      try {
+        setLoading(true);
 
-    setInvites(saved.reverse());
+        const { data, error } = await supabase
+          .from("partner_invites")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          console.error(error);
+
+          const saved = JSON.parse(
+            localStorage.getItem("spi-partner-invites") || "[]"
+          );
+
+          setInvites(saved.reverse());
+
+          return;
+        }
+
+        const formatted: InviteRecord[] =
+          data?.map((item: any) => ({
+            id: item.id,
+
+            businessName: item.business_name || "",
+            contactName: item.contact_name || "",
+            contactEmail: item.contact_email || "",
+            phone: item.contact_phone || "",
+
+            country: item.address || "",
+
+            businessCategory: item.industry || "",
+            connectionSource: item.met_source || "",
+
+            inviteStatus: item.invite_status || "Draft",
+
+            inviteReference:
+              item.invite_slug || "SPI-INVITE",
+
+            inviteLink: `${window.location.origin}/partner-invite/${item.invite_slug}`,
+
+            createdAt: item.created_at,
+          })) || [];
+
+        setInvites(formatted);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadInvites();
   }, []);
 
   const copyLink = async (link: string) => {
     await navigator.clipboard.writeText(link);
+
     alert("Invite link copied.");
   };
 
@@ -50,9 +113,12 @@ const AdminInviteQueuePage = () => {
         description="Review saved invitations, relationship statuses, onboarding links, and future partner opportunities."
       />
 
-      <section className="rounded-[2rem] border border-border/60 bg-card p-6 md:p-8 shadow-sm">
+      <section className="rounded-[2rem] border border-border/60 bg-card p-6 shadow-sm md:p-8">
         <div className="flex items-start gap-3">
-          <ClipboardList className="text-primary shrink-0 mt-1" size={24} />
+          <ClipboardList
+            className="mt-1 shrink-0 text-primary"
+            size={24}
+          />
 
           <div>
             <h2 className="font-display text-2xl text-card-foreground">
@@ -60,24 +126,37 @@ const AdminInviteQueuePage = () => {
             </h2>
 
             <p className="mt-2 text-sm leading-7 text-foreground/65">
-              Saved partner invitations are stored here temporarily until the
-              Supabase ecosystem database is connected.
+              Partner invitations are now connected to the
+              Serene Passage ecosystem database and can
+              eventually support onboarding automation,
+              invite tracking, account creation, and
+              relationship management workflows.
             </p>
           </div>
         </div>
       </section>
 
-      {invites.length === 0 ? (
+      {loading ? (
+        <section className="rounded-[2rem] border border-border/60 bg-card p-10 text-center shadow-sm">
+          <p className="text-sm text-foreground/60">
+            Loading partner invites...
+          </p>
+        </section>
+      ) : invites.length === 0 ? (
         <section className="rounded-[2rem] border border-dashed border-border bg-muted/20 p-10 text-center">
-          <ShieldCheck className="mx-auto text-primary mb-4" size={32} />
+          <ShieldCheck
+            className="mx-auto mb-4 text-primary"
+            size={32}
+          />
 
           <h3 className="font-display text-2xl text-card-foreground">
             No saved partner invites yet.
           </h3>
 
           <p className="mt-3 text-sm text-foreground/65">
-            Saved partner invitations will appear here after they are created
-            and stored from the Partner Invite & Capture System.
+            Saved partner invitations will appear here after
+            they are created from the Partner Invite &
+            Capture System.
           </p>
         </section>
       ) : (
@@ -98,7 +177,7 @@ const AdminInviteQueuePage = () => {
                       {invite.businessName || "Unnamed Business"}
                     </h2>
 
-                    <p className="mt-1 text-sm text-foreground/55">
+                    <p className="mt-1 text-sm text-foreground/55 break-all">
                       {invite.inviteReference}
                     </p>
                   </div>
@@ -119,7 +198,7 @@ const AdminInviteQueuePage = () => {
                         Email
                       </p>
 
-                      <p className="mt-1 text-sm text-card-foreground break-all">
+                      <p className="mt-1 break-all text-sm text-card-foreground">
                         {invite.contactEmail || "—"}
                       </p>
                     </div>
@@ -166,7 +245,7 @@ const AdminInviteQueuePage = () => {
                   </div>
                 </div>
 
-                <div className="xl:w-[340px] space-y-4">
+                <div className="space-y-4 xl:w-[340px]">
                   <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
                     <p className="text-xs uppercase tracking-wide text-foreground/50">
                       Invitation Link
@@ -180,7 +259,7 @@ const AdminInviteQueuePage = () => {
                   <div className="flex flex-wrap gap-3">
                     <button
                       onClick={() => copyLink(invite.inviteLink)}
-                      className="h-11 px-4 rounded-xl border border-border bg-card text-sm font-medium inline-flex items-center gap-2"
+                      className="inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-medium"
                     >
                       <Copy size={15} />
                       Copy Link
@@ -190,7 +269,7 @@ const AdminInviteQueuePage = () => {
                       href={invite.inviteLink}
                       target="_blank"
                       rel="noreferrer"
-                      className="h-11 px-4 rounded-xl bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-2"
+                      className="inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground"
                     >
                       <ExternalLink size={15} />
                       Open Invite
@@ -198,12 +277,12 @@ const AdminInviteQueuePage = () => {
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-                    <button className="h-10 px-4 rounded-xl border border-border bg-card text-xs font-medium inline-flex items-center gap-2">
+                    <button className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-medium">
                       <Mail size={14} />
                       Email Sent
                     </button>
 
-                    <button className="h-10 px-4 rounded-xl border border-border bg-card text-xs font-medium inline-flex items-center gap-2">
+                    <button className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-medium">
                       <MessageSquareText size={14} />
                       Text Sent
                     </button>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { SectionHeader, StatusBadge } from "@/components/vendor/VendorLayout";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 
 import {
   AlertCircle,
@@ -12,7 +13,6 @@ import {
   CheckCircle2,
   Clock3,
   FileCheck2,
-  Globe2,
   HandHeart,
   Heart,
   Languages,
@@ -86,6 +86,7 @@ const categories = [
 ];
 
 type CampaignRequest = {
+  id?: string;
   title: string;
   partner: string;
   category: string;
@@ -107,6 +108,7 @@ const textAreaCls =
   "w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
 
 const CampaignRequestsPage = () => {
+  const [saving, setSaving] = useState(false);
   const [requests, setRequests] = useState<CampaignRequest[]>([]);
 
   const [form, setForm] = useState({
@@ -123,37 +125,55 @@ const CampaignRequestsPage = () => {
   });
 
   useEffect(() => {
-    const saved = JSON.parse(
-      localStorage.getItem("spi-campaign-requests") || "[]"
-    );
+    const loadRequests = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("campaign_requests")
+          .select("*")
+          .order("created_at", { ascending: false });
 
-    setRequests(saved.reverse());
+        if (error) {
+          console.error(error);
+
+          const saved = JSON.parse(
+            localStorage.getItem("spi-campaign-requests") || "[]"
+          );
+
+          setRequests(saved.reverse());
+          return;
+        }
+
+        const formatted: CampaignRequest[] =
+          data?.map((item: any) => ({
+            id: item.id,
+            title: item.title || "",
+            partner: item.partner || "",
+            category: item.category || "",
+            destination: item.destination || "",
+            campaignType: item.campaign_type || "",
+            proposedDates: item.proposed_dates || "",
+            groupSize: item.group_size || "",
+            notes: item.notes || "",
+            aiIdeas: item.ai_ideas || "",
+            status: item.status || "Submitted",
+            urgent: Boolean(item.urgent),
+            createdAt: item.created_at,
+          })) || [];
+
+        setRequests(formatted);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadRequests();
   }, []);
 
   const update = (key: string, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const saveRequest = () => {
-    const existing = JSON.parse(
-      localStorage.getItem("spi-campaign-requests") || "[]"
-    );
-
-    const newRequest = {
-      ...form,
-      status: "Submitted",
-      createdAt: new Date().toISOString(),
-    };
-
-    const updated = [...existing, newRequest];
-
-    localStorage.setItem(
-      "spi-campaign-requests",
-      JSON.stringify(updated)
-    );
-
-    setRequests(updated.reverse());
-
+  const resetForm = () => {
     setForm({
       title: "",
       partner: "",
@@ -166,13 +186,70 @@ const CampaignRequestsPage = () => {
       aiIdeas: "",
       urgent: false,
     });
+  };
 
-    alert("Campaign request submitted for review.");
+  const saveRequest = async () => {
+    if (!form.title || !form.partner || !form.category) {
+      alert("Please complete Title, Partner/Business Name, and Campaign Category.");
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      const payload = {
+        title: form.title,
+        partner: form.partner,
+        category: form.category,
+        destination: form.destination,
+        campaign_type: form.campaignType,
+        proposed_dates: form.proposedDates,
+        group_size: form.groupSize,
+        notes: form.notes,
+        ai_ideas: form.aiIdeas,
+        urgent: form.urgent,
+        status: "Submitted",
+      };
+
+      const { error } = await supabase
+        .from("campaign_requests")
+        .insert([payload]);
+
+      if (error) {
+        console.error(error);
+        alert("Supabase campaign request save failed. Check console for details.");
+        return;
+      }
+
+      const existing = JSON.parse(
+        localStorage.getItem("spi-campaign-requests") || "[]"
+      );
+
+      const newRequest = {
+        ...form,
+        status: "Submitted",
+        createdAt: new Date().toISOString(),
+      };
+
+      const updated = [...existing, newRequest];
+
+      localStorage.setItem("spi-campaign-requests", JSON.stringify(updated));
+
+      setRequests([...updated].reverse());
+      resetForm();
+
+      alert("Campaign request submitted for review.");
+    } catch (err) {
+      console.error(err);
+      alert("Unexpected error saving campaign request.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="space-y-8">
-      <section className="relative overflow-hidden rounded-3xl border border-border/60 shadow-sm min-h-[360px] bg-[hsl(0,0%,8%)]">
+      <section className="relative min-h-[360px] overflow-hidden rounded-3xl border border-border/60 bg-[hsl(0,0%,8%)] shadow-sm">
         <img
           src={collaborationHero}
           alt="Luxury collaboration dinner experience"
@@ -182,7 +259,7 @@ const CampaignRequestsPage = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/55 to-black/18" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-transparent to-black/20" />
 
-        <div className="relative z-10 p-6 md:p-10 min-h-[360px] flex items-center">
+        <div className="relative z-10 flex min-h-[360px] items-center p-6 md:p-10">
           <div className="max-w-3xl">
             <div className="mb-4 flex flex-wrap items-center gap-3">
               <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-black/30 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold backdrop-blur">
@@ -196,11 +273,11 @@ const CampaignRequestsPage = () => {
               </div>
             </div>
 
-            <h1 className="font-display text-3xl md:text-5xl text-cream leading-tight">
+            <h1 className="font-display text-3xl leading-tight text-cream md:text-5xl">
               Collaboration Requests & Experience Development
             </h1>
 
-            <p className="text-sm md:text-base text-cream/75 mt-5 leading-relaxed max-w-2xl">
+            <p className="mt-5 max-w-2xl text-sm leading-relaxed text-cream/75 md:text-base">
               Share destination ideas, partnership opportunities, package
               concepts, hosted experiences, seasonal campaigns, and collaborative
               travel experiences Serene Passage may review, revise, curate, and
@@ -264,7 +341,6 @@ const CampaignRequestsPage = () => {
               onChange={(e) => update("category", e.target.value)}
             >
               <option value="">Select Category</option>
-
               {categories.map((item) => (
                 <option key={item}>{item}</option>
               ))}
@@ -292,9 +368,7 @@ const CampaignRequestsPage = () => {
             <input
               className={inputCls}
               value={form.campaignType}
-              onChange={(e) =>
-                update("campaignType", e.target.value)
-              }
+              onChange={(e) => update("campaignType", e.target.value)}
               placeholder="Group package, seasonal offer, VIP experience..."
             />
           </div>
@@ -307,9 +381,7 @@ const CampaignRequestsPage = () => {
             <input
               className={inputCls}
               value={form.proposedDates}
-              onChange={(e) =>
-                update("proposedDates", e.target.value)
-              }
+              onChange={(e) => update("proposedDates", e.target.value)}
               placeholder="June 2026, Summer Campaign, Holiday Season..."
             />
           </div>
@@ -331,9 +403,7 @@ const CampaignRequestsPage = () => {
             <input
               type="checkbox"
               checked={form.urgent}
-              onChange={(e) =>
-                update("urgent", e.target.checked)
-              }
+              onChange={(e) => update("urgent", e.target.checked)}
             />
 
             <div>
@@ -379,14 +449,15 @@ const CampaignRequestsPage = () => {
         <div className="mt-6 flex flex-wrap gap-3">
           <button
             type="button"
+            disabled={saving}
             onClick={saveRequest}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 disabled:opacity-50"
           >
             <Save size={16} />
-            Submit Collaboration Request
+            {saving ? "Submitting..." : "Submit Collaboration Request"}
           </button>
 
-          <Button variant="outline">
+          <Button variant="outline" disabled={saving}>
             Save Draft
           </Button>
         </div>
@@ -399,16 +470,16 @@ const CampaignRequestsPage = () => {
           description="Partners may eventually collaborate across multiple destination and hospitality categories."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {collaborationTypes.map((item) => {
             const Icon = item.icon;
 
             return (
               <div
                 key={item.title}
-                className="bg-card rounded-2xl border border-border/60 shadow-sm p-6"
+                className="rounded-2xl border border-border/60 bg-card p-6 shadow-sm"
               >
-                <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
                   <Icon size={20} className="text-primary" />
                 </div>
 
@@ -416,7 +487,7 @@ const CampaignRequestsPage = () => {
                   {item.title}
                 </h3>
 
-                <p className="text-sm text-foreground/65 mt-2 leading-7">
+                <p className="mt-2 text-sm leading-7 text-foreground/65">
                   {item.description}
                 </p>
               </div>
@@ -425,15 +496,15 @@ const CampaignRequestsPage = () => {
         </div>
       </section>
 
-      <div className="bg-card rounded-[2rem] border border-border/60 shadow-sm p-6">
-        <p className="text-[10px] tracking-[0.22em] uppercase text-gold mb-4">
+      <div className="rounded-[2rem] border border-border/60 bg-card p-6 shadow-sm">
+        <p className="mb-4 text-[10px] uppercase tracking-[0.22em] text-gold">
           Collaboration Workflow
         </p>
 
         <div className="flex items-center gap-2 overflow-x-auto pb-1">
           {workflow.map((step, index) => (
-            <div key={step} className="flex items-center gap-2 shrink-0">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border/70 bg-background text-xs text-foreground/75">
+            <div key={step} className="flex shrink-0 items-center gap-2">
+              <div className="flex items-center gap-2 rounded-full border border-border/70 bg-background px-3 py-1.5 text-xs text-foreground/75">
                 <span className="h-1.5 w-1.5 rounded-full bg-gold" />
                 {step}
               </div>
@@ -449,16 +520,13 @@ const CampaignRequestsPage = () => {
       <section>
         <SectionHeader
           eyebrow="Saved Collaboration Requests"
-          title="Temporary Request Tracking"
-          description="Requests are temporarily stored locally until backend database infrastructure is connected."
+          title="Collaboration Request Tracking"
+          description="Requests are now connected to Supabase and can later support review, revision, approval, and feature workflows."
         />
 
         {requests.length === 0 ? (
           <div className="rounded-[2rem] border border-dashed border-border bg-muted/20 p-10 text-center">
-            <MessageSquareText
-              className="mx-auto mb-4 text-primary"
-              size={32}
-            />
+            <MessageSquareText className="mx-auto mb-4 text-primary" size={32} />
 
             <h3 className="font-display text-2xl text-card-foreground">
               No collaboration requests submitted yet.
@@ -473,15 +541,15 @@ const CampaignRequestsPage = () => {
             {requests.map((request, index) => (
               <div
                 key={`${request.title}-${index}`}
-                className="bg-card rounded-[2rem] border border-border/60 shadow-sm p-6"
+                className="rounded-[2rem] border border-border/60 bg-card p-6 shadow-sm"
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="text-[10px] tracking-[0.18em] uppercase text-gold">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-gold">
                       {request.partner}
                     </p>
 
-                    <h3 className="font-display text-xl text-card-foreground mt-1">
+                    <h3 className="mt-1 font-display text-xl text-card-foreground">
                       {request.title}
                     </h3>
 
@@ -489,7 +557,7 @@ const CampaignRequestsPage = () => {
                       {request.destination}
                     </p>
 
-                    <p className="text-sm text-foreground/65 mt-3 leading-7 max-w-3xl">
+                    <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/65">
                       {request.notes}
                     </p>
                   </div>
@@ -534,10 +602,7 @@ const CampaignRequestsPage = () => {
                 {request.aiIdeas && (
                   <div className="mt-5 rounded-2xl border border-gold/20 bg-gold/5 p-4">
                     <div className="flex items-start gap-3">
-                      <Wand2
-                        size={18}
-                        className="mt-1 shrink-0 text-gold"
-                      />
+                      <Wand2 size={18} className="mt-1 shrink-0 text-gold" />
 
                       <div>
                         <p className="text-xs uppercase tracking-wide text-gold">
@@ -554,7 +619,9 @@ const CampaignRequestsPage = () => {
 
                 <p className="mt-5 text-xs text-foreground/50">
                   Submitted:{" "}
-                  {new Date(request.createdAt).toLocaleString()}
+                  {request.createdAt
+                    ? new Date(request.createdAt).toLocaleString()
+                    : "—"}
                 </p>
               </div>
             ))}
@@ -569,19 +636,19 @@ const CampaignRequestsPage = () => {
           description="These represent the types of destination experiences that may evolve into future curated offerings."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {sampleIdeas.map((idea) => (
             <div
               key={idea}
-              className="bg-card rounded-2xl border border-border/60 shadow-sm p-6"
+              className="rounded-2xl border border-border/60 bg-card p-6 shadow-sm"
             >
-              <Sparkles size={18} className="text-gold mb-3" />
+              <Sparkles size={18} className="mb-3 text-gold" />
 
               <h3 className="font-display text-lg text-card-foreground">
                 {idea}
               </h3>
 
-              <p className="text-sm text-foreground/60 mt-2 leading-7">
+              <p className="mt-2 text-sm leading-7 text-foreground/60">
                 Future collaboration requests may support package planning,
                 seasonal campaigns, hosted experiences, retreat concepts,
                 transportation coordination, dining integration, and more.
@@ -592,20 +659,17 @@ const CampaignRequestsPage = () => {
       </section>
 
       <div className="rounded-[2rem] border border-lavender/40 bg-lavender/10 p-6">
-        <div className="flex flex-col md:flex-row md:items-center gap-4">
-          <MessageSquareText
-            size={20}
-            className="text-primary shrink-0"
-          />
+        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+          <MessageSquareText size={20} className="shrink-0 text-primary" />
 
-          <p className="text-sm text-foreground/75 leading-7">
+          <p className="text-sm leading-7 text-foreground/75">
             Future collaboration requests should support threaded discussions,
             revision tracking, shared attachments, urgent flags, approval
             history, and internal Serene Passage notes connected to each
             experience concept.
           </p>
 
-          <Button className="md:ml-auto bg-primary hover:bg-primary/90">
+          <Button className="bg-primary hover:bg-primary/90 md:ml-auto">
             Collaboration Workflow Expanding
           </Button>
         </div>
@@ -667,10 +731,10 @@ const CampaignRequestsPage = () => {
         </div>
       </div>
 
-      <div className="bg-card rounded-[2rem] border border-border/60 shadow-sm p-6 md:p-8">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+      <div className="rounded-[2rem] border border-border/60 bg-card p-6 shadow-sm md:p-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-[10px] tracking-[0.22em] uppercase text-gold mb-2">
+            <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-gold">
               Future Expansion
             </p>
 
@@ -678,7 +742,7 @@ const CampaignRequestsPage = () => {
               AI-assisted collaborative experience development
             </h2>
 
-            <p className="text-sm text-foreground/65 mt-3 leading-7">
+            <p className="mt-3 text-sm leading-7 text-foreground/65">
               As the ecosystem grows, Serene Passage plans to explore future
               AI-assisted collaboration tools capable of helping partners and
               Serene Passage create destination packages, timing structures,
@@ -687,7 +751,7 @@ const CampaignRequestsPage = () => {
             </p>
           </div>
 
-          <Button className="bg-gold hover:bg-gold/90 text-foreground rounded-full px-6">
+          <Button className="rounded-full bg-gold px-6 text-foreground hover:bg-gold/90">
             Explore Future Collaboration Tools
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
